@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { colors } from '../constants'
+import { colors } from '../../constants'
 
-const ToDoScreen = () => {
+const HabitsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>To Do's</Text>
+      <Text style={styles.title}>Habits</Text>
     </View>
   )
 }
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ToDoScreen
+export default HabitsScreen
