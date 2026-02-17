@@ -10,6 +10,7 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: colors.navbar },
+        headerTitleAlign: 'center',
         headerTintColor: colors.text,
         headerTitleStyle: { fontFamily: fonts.semiBold },
         tabBarStyle: { backgroundColor: colors.navbar, borderTopColor: colors.navbar },
