@@ -31,6 +31,7 @@ const TaskInput = ({ onSubmit }: Props) => {
           value={text}
           onChangeText={setText}
           onSubmitEditing={handleSubmit}
+          submitBehavior="submit"
           returnKeyType="done"
         />
       </View>
