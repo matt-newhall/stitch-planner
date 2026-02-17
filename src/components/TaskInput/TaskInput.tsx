@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors } from '../../constants'
+import { colors, fonts } from '../../constants'
 
 type Props = {
   readonly onSubmit: (title: string) => void
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: colors.text,
+    fontFamily: fonts.regular,
   },
 })
 

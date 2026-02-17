@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { colors } from '../../constants'
+import { colors, fonts } from '../../constants'
 
 const HabitsScreen = () => {
   return (
@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     color: colors.text,
+    fontFamily: fonts.bold,
   },
 })
 

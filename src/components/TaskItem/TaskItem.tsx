@@ -1,7 +1,7 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors } from '../../constants'
+import { colors, fonts } from '../../constants'
 import type { Task } from '../../types'
 
 type Props = {
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: colors.text,
+    fontFamily: fonts.regular,
   },
   completed: {
     textDecorationLine: 'line-through',

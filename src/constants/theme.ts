@@ -6,3 +6,9 @@ export const colors = {
   text: '#FFFFFF',
   textSecondary: '#8E8E93',
 } as const
+
+export const fonts = {
+  regular: 'Inter_400Regular',
+  semiBold: 'Inter_600SemiBold',
+  bold: 'Inter_700Bold',
+} as const
