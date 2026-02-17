@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { colors } from '../constants'
 import { ToDoScreen, HabitsScreen } from '../screens'
 
@@ -15,8 +16,24 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: colors.textSecondary,
       }}
     >
-      <Tab.Screen name="To Do's" component={ToDoScreen} />
-      <Tab.Screen name="Habits" component={HabitsScreen} />
+      <Tab.Screen
+        name="To Do's"
+        component={ToDoScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="bullseye-arrow" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Habits"
+        component={HabitsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="atom" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   )
 }
