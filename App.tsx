@@ -1,12 +1,25 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { DarkTheme, NavigationContainer } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
+import { colors } from './src/constants'
 import { RootNavigator } from './src/navigation'
+
+const navTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: colors.background,
+    card: colors.navbar,
+    primary: colors.accent,
+    text: colors.text,
+    border: colors.navbar,
+  },
+}
 
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <RootNavigator />
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </NavigationContainer>
   )
 }
