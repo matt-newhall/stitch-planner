@@ -1,5 +1,7 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import type { Task } from '../types'
+import storageAdapter from './storage'
 
 type TodoState = {
   readonly tasks: Task[]
@@ -8,36 +10,41 @@ type TodoState = {
   deleteTask: (id: string) => void
 }
 
-/**
- * Zustand store for managing todo tasks
- */
-const useTodoStore = create<TodoState>((set) => ({
-  tasks: [],
+const useTodoStore = create<TodoState>()(
+  persist(
+    (set) => ({
+      tasks: [],
 
-  addTask: (title) =>
-    set((state) => ({
-      tasks: [
-        ...state.tasks,
-        {
-          id: Date.now().toString(),
-          title,
-          completed: false,
-          createdAt: Date.now(),
-        },
-      ],
-    })),
+      addTask: (title) =>
+        set((state) => ({
+          tasks: [
+            ...state.tasks,
+            {
+              id: Date.now().toString(),
+              title,
+              completed: false,
+              createdAt: Date.now(),
+            },
+          ],
+        })),
 
-  toggleTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      ),
-    })),
+      toggleTask: (id) =>
+        set((state) => ({
+          tasks: state.tasks.map((task) =>
+            task.id === id ? { ...task, completed: !task.completed } : task
+          ),
+        })),
 
-  deleteTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.filter((task) => task.id !== id),
-    })),
-}))
+      deleteTask: (id) =>
+        set((state) => ({
+          tasks: state.tasks.filter((task) => task.id !== id),
+        })),
+    }),
+    {
+      name: 'todo-storage',
+      storage: createJSONStorage(() => storageAdapter),
+    },
+  ),
+)
 
 export default useTodoStore
