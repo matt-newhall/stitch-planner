@@ -5,22 +5,28 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { TaskItem, TaskInput, DaySelector, EmptyState } from '../../components'
 import { colors } from '../../constants'
-import { shiftDate } from '../../utils'
 import type { Task } from '../../types'
 import useToDoScreen from './ToDoScreen.hook'
+import { shiftDate } from '../../utils'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const CONFETTI_COLORS = [colors.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
 
 const ToDoScreen = () => {
-  const { tasks, emptyStateVariant, selectedDate, setSelectedDate, handleAdd, handleToggle, handleDelete } = useToDoScreen()
+  const {
+    tasks, emptyStateVariant, selectedDate, setSelectedDate,
+    handleAdd, handleToggle, handleDelete,
+  } = useToDoScreen()
+
   const [bottomPadding, setBottomPadding] = useState(0)
+
   const confettiRef = useRef<ConfettiCannon>(null)
   const slideAnim = useRef(new Animated.Value(0)).current
   const opacityAnim = useRef(new Animated.Value(1)).current
   const swipeDirectionRef = useRef(0)
   const selectedDateRef = useRef(selectedDate)
+
   selectedDateRef.current = selectedDate
 
   const swipeGesture = useMemo(() =>
@@ -37,6 +43,14 @@ const ToDoScreen = () => {
       })
   , [])
 
+  const handleToggleWithConfetti = useCallback((id: string) => {
+    const task = tasks.find((t) => t.id === id)
+    if (task && !task.completed) {
+      confettiRef.current?.start()
+    }
+    handleToggle(id)
+  }, [tasks, handleToggle])
+
   useEffect(() => {
     if (swipeDirectionRef.current === 0) return
     slideAnim.setValue(swipeDirectionRef.current * SCREEN_WIDTH * 0.3)
@@ -46,14 +60,6 @@ const ToDoScreen = () => {
       Animated.timing(opacityAnim, { toValue: 1, duration: 160, useNativeDriver: true }),
     ]).start()
   }, [selectedDate])
-
-  const handleToggleWithConfetti = useCallback((id: string) => {
-    const task = tasks.find((t) => t.id === id)
-    if (task && !task.completed) {
-      confettiRef.current?.start()
-    }
-    handleToggle(id)
-  }, [tasks, handleToggle])
 
   useEffect(() => {
     const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
   },
   flashList: {
     flex: 1,
-    paddingTop: 8
+    paddingTop: 8,
   },
   divider: {
     width: '70%',
