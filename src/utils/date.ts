@@ -38,6 +38,16 @@ export const getDayOptions = (): DayOption[] => {
 }
 
 /**
+ * Returns a new ISO date string shifted by the given number of days.
+ */
+export const shiftDate = (isoDate: string, days: number): string => {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  const d = new Date(year, month - 1, day)
+  d.setDate(d.getDate() + days)
+  return toISODateString(d)
+}
+
+/**
  * Returns a display label for an ISO date string.
  * Returns "Today", "Tomorrow", or the short weekday name.
  */

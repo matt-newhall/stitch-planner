@@ -1,1 +1,1 @@
-export { getDayOptions, getDayLabel, todayISO, toISODateString } from './date'
+export { getDayOptions, getDayLabel, todayISO, toISODateString, shiftDate } from './date'
