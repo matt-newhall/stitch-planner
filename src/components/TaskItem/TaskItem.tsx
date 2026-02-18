@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
@@ -14,6 +15,16 @@ type Props = {
  * Renders a pill-shaped task card with right-aligned checkbox and swipe-to-delete
  */
 const TaskItem = ({ task, onToggle, onDelete }: Props) => {
+  const checkScale = useRef(new Animated.Value(1)).current
+
+  useEffect(() => {
+    if (task.completed) {
+      Animated.sequence([
+        Animated.spring(checkScale, { toValue: 1.35, useNativeDriver: true, tension: 300, friction: 5 }),
+        Animated.spring(checkScale, { toValue: 1, useNativeDriver: true, tension: 200, friction: 6 }),
+      ]).start()
+    }
+  }, [task.completed])
   const renderRightActions = (
     _progress: Animated.AnimatedInterpolation<number>,
     dragX: Animated.AnimatedInterpolation<number>,
@@ -41,11 +52,13 @@ const TaskItem = ({ task, onToggle, onDelete }: Props) => {
             {task.title}
           </Text>
           <Pressable onPress={onToggle} hitSlop={8}>
-            <MaterialCommunityIcons
-              name={task.completed ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
-              color={task.completed ? colors.accent : colors.textSecondary}
-              size={26}
-            />
+            <Animated.View style={{ transform: [{ scale: checkScale }] }}>
+              <MaterialCommunityIcons
+                name={task.completed ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+                color={task.completed ? colors.accent : colors.textSecondary}
+                size={26}
+              />
+            </Animated.View>
           </Pressable>
         </View>
       </Swipeable>
