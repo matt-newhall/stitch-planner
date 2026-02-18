@@ -2,10 +2,11 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { Task } from '../types'
 import storageAdapter from './storage'
+import { todayISO } from '../utils'
 
 type TodoState = {
   readonly tasks: Task[]
-  addTask: (title: string) => void
+  addTask: (title: string, scheduledDate?: string) => void
   toggleTask: (id: string) => void
   deleteTask: (id: string) => void
 }
@@ -15,7 +16,7 @@ const useTodoStore = create<TodoState>()(
     (set) => ({
       tasks: [],
 
-      addTask: (title) =>
+      addTask: (title, scheduledDate = todayISO()) =>
         set((state) => ({
           tasks: [
             ...state.tasks,
@@ -24,6 +25,7 @@ const useTodoStore = create<TodoState>()(
               title,
               completed: false,
               createdAt: Date.now(),
+              scheduledDate,
             },
           ],
         })),

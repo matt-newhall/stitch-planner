@@ -3,4 +3,5 @@ export type Task = {
   readonly title: string
   readonly completed: boolean
   readonly createdAt: number
+  readonly scheduledDate: string
 }

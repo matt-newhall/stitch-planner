@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTodoStore } from '../../state'
+import { todayISO } from '../../utils'
 
 const AUTO_DELETE_DELAY = 3000
 
@@ -7,6 +8,8 @@ const AUTO_DELETE_DELAY = 3000
  * Hook encapsulating todo screen logic and store interactions
  */
 const useToDoScreen = () => {
+  const [selectedDate, setSelectedDate] = useState(todayISO())
+
   const tasks = useTodoStore((s) => s.tasks)
   const addTask = useTodoStore((s) => s.addTask)
   const toggleTask = useTodoStore((s) => s.toggleTask)
@@ -20,12 +23,13 @@ const useToDoScreen = () => {
     }
   }, [])
 
-  const pendingTasks = tasks.filter((t) => !t.completed)
-  const completedTasks = tasks.filter((t) => t.completed)
+  const filteredTasks = tasks.filter((t) => t.scheduledDate === selectedDate)
+  const pendingTasks = filteredTasks.filter((t) => !t.completed)
+  const completedTasks = filteredTasks.filter((t) => t.completed)
   const sortedTasks = [...pendingTasks, ...completedTasks]
 
-  const handleAdd = useCallback((title: string) => {
-    addTask(title)
+  const handleAdd = useCallback((title: string, scheduledDate: string) => {
+    addTask(title, scheduledDate)
   }, [addTask])
 
   const handleToggle = useCallback((id: string) => {
@@ -58,6 +62,8 @@ const useToDoScreen = () => {
 
   return {
     tasks: sortedTasks,
+    selectedDate,
+    setSelectedDate,
     handleAdd,
     handleToggle,
     handleDelete,
