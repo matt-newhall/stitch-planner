@@ -36,8 +36,16 @@ const useToDoScreen = () => {
   })()
 
   const handleAdd = useCallback((title: string, scheduledDate: string) => {
+    timersRef.current.forEach((timer, id) => {
+      const task = tasks.find((t) => t.id === id)
+      if (task?.scheduledDate === scheduledDate) {
+        clearTimeout(timer)
+        timersRef.current.delete(id)
+        deleteTask(id)
+      }
+    })
     addTask(title, scheduledDate)
-  }, [addTask])
+  }, [tasks, addTask, deleteTask])
 
   const handleToggle = useCallback((id: string) => {
     const task = tasks.find((t) => t.id === id)
