@@ -18,12 +18,14 @@ type Props = {
 const DaySelector = ({ selectedDate, onSelect, contentContainerStyle }: Props) => {
   const options = getDayOptions()
   const scrollRef = useRef<ScrollView>(null)
-  const offsetsRef = useRef<Map<string, number>>(new Map())
+  const chipRectsRef = useRef<Map<string, { x: number; width: number }>>(new Map())
+  const scrollWidthRef = useRef(0)
 
   useEffect(() => {
-    const x = offsetsRef.current.get(selectedDate)
-    if (x !== undefined) {
-      scrollRef.current?.scrollTo({ x: Math.max(0, x - 24), animated: true })
+    const rect = chipRectsRef.current.get(selectedDate)
+    if (rect && scrollWidthRef.current > 0) {
+      const x = Math.max(0, rect.x + rect.width - scrollWidthRef.current + 24)
+      scrollRef.current?.scrollTo({ x, animated: true })
     }
   }, [selectedDate])
 
@@ -34,11 +36,12 @@ const DaySelector = ({ selectedDate, onSelect, contentContainerStyle }: Props) =
       showsHorizontalScrollIndicator={false}
       style={styles.scroll}
       contentContainerStyle={[styles.container, contentContainerStyle]}
+      onLayout={(e) => { scrollWidthRef.current = e.nativeEvent.layout.width }}
     >
       {options.map(({ label, date }) => (
         <Pressable
           key={date}
-          onLayout={(e) => offsetsRef.current.set(date, e.nativeEvent.layout.x)}
+          onLayout={(e) => chipRectsRef.current.set(date, { x: e.nativeEvent.layout.x, width: e.nativeEvent.layout.width })}
           style={[styles.chip, selectedDate === date && styles.chipActive]}
           onPress={() => onSelect(date)}
         >
