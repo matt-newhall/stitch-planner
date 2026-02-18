@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { colors, fonts } from '../../constants'
@@ -12,12 +13,23 @@ type Props = {
 /**
  * Horizontal scrollable row of day chips covering the next 7 days.
  * Displays "Today", "Tomorrow", then short weekday names for subsequent days.
+ * Automatically scrolls to keep the selected chip visible.
  */
 const DaySelector = ({ selectedDate, onSelect, contentContainerStyle }: Props) => {
   const options = getDayOptions()
+  const scrollRef = useRef<ScrollView>(null)
+  const offsetsRef = useRef<Map<string, number>>(new Map())
+
+  useEffect(() => {
+    const x = offsetsRef.current.get(selectedDate)
+    if (x !== undefined) {
+      scrollRef.current?.scrollTo({ x: Math.max(0, x - 24), animated: true })
+    }
+  }, [selectedDate])
 
   return (
     <ScrollView
+      ref={scrollRef}
       horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.scroll}
@@ -26,6 +38,7 @@ const DaySelector = ({ selectedDate, onSelect, contentContainerStyle }: Props) =
       {options.map(({ label, date }) => (
         <Pressable
           key={date}
+          onLayout={(e) => offsetsRef.current.set(date, e.nativeEvent.layout.x)}
           style={[styles.chip, selectedDate === date && styles.chipActive]}
           onPress={() => onSelect(date)}
         >
