@@ -2,6 +2,7 @@ import { DarkTheme, NavigationContainer } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold, Inter_900Black } from '@expo-google-fonts/inter'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ActivityIndicator, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { colors } from './src/constants'
@@ -40,6 +41,7 @@ const App = () => {
     Inter_600SemiBold,
     Inter_700Bold,
     Inter_900Black,
+    ...MaterialCommunityIcons.font,
   })
 
   const storesHydrated = useStoreHydration()
