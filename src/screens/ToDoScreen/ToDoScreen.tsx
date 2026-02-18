@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Keyboard, Platform, StyleSheet, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
-import { TaskItem, TaskInput, DaySelector } from '../../components'
+import { TaskItem, TaskInput, DaySelector, EmptyState } from '../../components'
 import { colors } from '../../constants'
 import type { Task } from '../../types'
 import useToDoScreen from './ToDoScreen.hook'
 
 const ToDoScreen = () => {
-  const { tasks, selectedDate, setSelectedDate, handleAdd, handleToggle, handleDelete } = useToDoScreen()
+  const { tasks, emptyStateVariant, selectedDate, setSelectedDate, handleAdd, handleToggle, handleDelete } = useToDoScreen()
   const [bottomPadding, setBottomPadding] = useState(0)
 
   useEffect(() => {
@@ -40,13 +40,17 @@ const ToDoScreen = () => {
       <View style={styles.listWrapper}>
         <DaySelector selectedDate={selectedDate} onSelect={setSelectedDate} />
         <View style={[styles.divider, styles.dividerTop]} />
-        <FlashList
-          data={tasks}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          style={styles.flashList}
-          keyboardShouldPersistTaps="always"
-        />
+        {emptyStateVariant !== null ? (
+          <EmptyState variant={emptyStateVariant} />
+        ) : (
+          <FlashList
+            data={tasks}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            style={styles.flashList}
+            keyboardShouldPersistTaps="always"
+          />
+        )}
       </View>
       <View style={[styles.divider, styles.dividerBottom]} />
       <TaskInput onSubmit={handleAdd} defaultDate={selectedDate} />

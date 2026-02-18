@@ -11,6 +11,7 @@ const useToDoScreen = () => {
   const [selectedDate, setSelectedDate] = useState(todayISO())
 
   const tasks = useTodoStore((s) => s.tasks)
+  const lastCompletionDate = useTodoStore((s) => s.lastCompletionDate)
   const addTask = useTodoStore((s) => s.addTask)
   const toggleTask = useTodoStore((s) => s.toggleTask)
   const deleteTask = useTodoStore((s) => s.deleteTask)
@@ -27,6 +28,12 @@ const useToDoScreen = () => {
   const pendingTasks = filteredTasks.filter((t) => !t.completed)
   const completedTasks = filteredTasks.filter((t) => t.completed)
   const sortedTasks = [...pendingTasks, ...completedTasks]
+
+  const emptyStateVariant: 'empty' | 'allDone' | null = (() => {
+    if (sortedTasks.length > 0 && pendingTasks.length > 0) return null
+    if (sortedTasks.some((t) => t.completed) || lastCompletionDate === selectedDate) return 'allDone'
+    return 'empty'
+  })()
 
   const handleAdd = useCallback((title: string, scheduledDate: string) => {
     addTask(title, scheduledDate)
@@ -62,6 +69,7 @@ const useToDoScreen = () => {
 
   return {
     tasks: sortedTasks,
+    emptyStateVariant,
     selectedDate,
     setSelectedDate,
     handleAdd,
