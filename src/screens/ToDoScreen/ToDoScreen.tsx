@@ -3,6 +3,7 @@ import { Animated, Dimensions, Keyboard, Platform, StyleSheet, View } from 'reac
 import { FlashList } from '@shopify/flash-list'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ConfettiCannon from 'react-native-confetti-cannon'
+import * as Haptics from 'expo-haptics'
 import { TaskItem, TaskInput, DaySelector, EmptyState } from '../../components'
 import { colors } from '../../constants'
 import type { Task } from '../../types'
@@ -38,6 +39,7 @@ const ToDoScreen = () => {
         if (Math.abs(velocityX) > 500 && Math.abs(translationX) > 60) {
           const direction = translationX > 0 ? -1 : 1
           swipeDirectionRef.current = direction
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
           setSelectedDate(shiftDate(selectedDateRef.current, direction))
         }
       })
