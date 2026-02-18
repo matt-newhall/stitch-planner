@@ -8,7 +8,7 @@ import { TaskItem, TaskInput, DaySelector, EmptyState } from '../../components'
 import { colors } from '../../constants'
 import type { Task } from '../../types'
 import useToDoScreen from './ToDoScreen.hook'
-import { shiftDate } from '../../utils'
+import { shiftDate, todayISO } from '../../utils'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -38,9 +38,13 @@ const ToDoScreen = () => {
         const { translationX, velocityX } = event
         if (Math.abs(velocityX) > 500 && Math.abs(translationX) > 60) {
           const direction = translationX > 0 ? -1 : 1
+          const next = shiftDate(selectedDateRef.current, direction)
+          const today = todayISO()
+          const max = shiftDate(today, 6)
+          if (next < today || next > max) return
           swipeDirectionRef.current = direction
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-          setSelectedDate(shiftDate(selectedDateRef.current, direction))
+          setSelectedDate(next)
         }
       })
   , [])
