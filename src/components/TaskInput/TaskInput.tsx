@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { LinearGradient } from 'expo-linear-gradient'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { colors, fonts } from '../../constants'
 import { getDayLabel } from '../../utils'
@@ -65,11 +64,6 @@ const TaskInput = ({ onSubmit, defaultDate }: Props) => {
     <View>
       {pickerVisible && (
         <Animated.View style={[styles.pickerPanel, { opacity: pickerAnim, transform: [{ translateY }] }]}>
-          <LinearGradient
-            colors={['transparent', colors.background]}
-            style={styles.gradient}
-            pointerEvents="none"
-          />
           <DaySelector
             selectedDate={scheduledDate}
             onSelect={handleDateSelect}
@@ -104,19 +98,10 @@ const TaskInput = ({ onSubmit, defaultDate }: Props) => {
 }
 
 const styles = StyleSheet.create({
-  pickerPanel: {
-    position: 'absolute',
-    bottom: '100%',
-    left: 0,
-    right: 0,
-  },
-  gradient: {
-    height: 28,
-  },
+  pickerPanel: {},
   dateSelectorContent: {
     paddingHorizontal: 0,
-    paddingTop: 0,
-    paddingBottom: 12,
+    paddingBottom: 2,
   },
   wrapper: {
     paddingHorizontal: 16,

@@ -39,6 +39,7 @@ const ToDoScreen = () => {
     <View style={[styles.container, { paddingBottom: bottomPadding }]}>
       <View style={styles.listWrapper}>
         <DaySelector selectedDate={selectedDate} onSelect={setSelectedDate} />
+        <View style={[styles.divider, styles.dividerTop]} />
         <FlashList
           data={tasks}
           renderItem={renderItem}
@@ -47,6 +48,7 @@ const ToDoScreen = () => {
           keyboardShouldPersistTaps="always"
         />
       </View>
+      <View style={[styles.divider, styles.dividerBottom]} />
       <TaskInput onSubmit={handleAdd} defaultDate={selectedDate} />
     </View>
   )
@@ -62,6 +64,21 @@ const styles = StyleSheet.create({
   },
   flashList: {
     flex: 1,
+    paddingTop: 8
+  },
+  divider: {
+    width: '70%',
+    alignSelf: 'center',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.textSecondary,
+    opacity: 0.4,
+  },
+  dividerTop: {
+    marginVertical: 2,
+  },
+  dividerBottom: {
+    marginBottom: 2,
+    marginTop: 16,
   },
 })
 
