@@ -125,7 +125,7 @@ const AddHabitModal = ({ visible, onClose, onSubmit }: Props) => {
         </Animated.View>
 
         <Animated.View
-          style={[styles.sheet, { transform: [{ translateY: slideAnim }] }]}
+          style={[styles.sheet, { transform: [{ translateY: slideAnim }], opacity: fadeAnim }]}
         >
           <View style={styles.header}>
             <Text style={styles.headerTitle}>New Habit</Text>
