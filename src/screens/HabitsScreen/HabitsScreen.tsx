@@ -1,13 +1,15 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import ConfettiCannon from 'react-native-confetti-cannon'
+import * as Haptics from 'expo-haptics'
 import { DaySelector, EmptyState, HabitCard } from '../../components'
 import { AddHabitModal } from '../../modals'
 import { COLORS } from '../../constants/theme'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
-import { getDayOptions } from '../../utils/date'
+import { getDayOptions, shiftDate, todayISO } from '../../utils/date'
 import type { HabitStack } from '../../types/habit'
 import { EmptyStateVariant } from '../../types/task'
 import useHabitsScreen from './HabitsScreen.hook'
@@ -29,6 +31,43 @@ const HabitsScreen = () => {
   } = useHabitsScreen()
 
   const dayOptions = useMemo(() => getDayOptions(14), [])
+
+  const slideAnim = useRef(new Animated.Value(0)).current
+  const opacityAnim = useRef(new Animated.Value(1)).current
+  const swipeDirectionRef = useRef(0)
+  const selectedDateRef = useRef(selectedDate)
+
+  selectedDateRef.current = selectedDate
+
+  const swipeGesture = useMemo(() =>
+    Gesture.Pan()
+      .activeOffsetX([-15, 15])
+      .failOffsetY([-20, 20])
+      .onEnd((event) => {
+        const { translationX, velocityX } = event
+        if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
+          const direction = translationX > 0 ? -1 : 1
+          const next = shiftDate(selectedDateRef.current, direction)
+          const today = todayISO()
+          const max = shiftDate(today, 13)
+          if (next < today || next > max) return
+          swipeDirectionRef.current = direction
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+          setSelectedDate(next)
+        }
+      })
+  , [])
+
+  useEffect(() => {
+    if (swipeDirectionRef.current === 0) return
+    slideAnim.stopAnimation()
+    slideAnim.setValue(swipeDirectionRef.current * SCREEN_WIDTH * 0.3)
+    opacityAnim.setValue(0)
+    Animated.parallel([
+      Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, tension: 180, friction: 22 }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 160, useNativeDriver: true }),
+    ]).start()
+  }, [selectedDate])
 
   const confettiRef = useRef<ConfettiCannon>(null)
   const emojiAnims = useRef(
@@ -76,17 +115,21 @@ const HabitsScreen = () => {
         <DaySelector selectedDate={selectedDate} onSelect={setSelectedDate} options={dayOptions} />
         <View style={[styles.divider, styles.dividerTop]} />
 
-        {selectedDateStacks.length === 0 ? (
-          <EmptyState variant={EmptyStateVariant.HabitsEmpty} />
-        ) : (
-          <FlashList
-            data={selectedDateStacks}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            extraData={completedHabitIds}
-          />
-        )}
+        <GestureDetector gesture={swipeGesture}>
+          <Animated.View style={[styles.gestureArea, { transform: [{ translateX: slideAnim }], opacity: opacityAnim }]}>
+            {selectedDateStacks.length === 0 ? (
+              <EmptyState variant={EmptyStateVariant.HabitsEmpty} />
+            ) : (
+              <FlashList
+                data={selectedDateStacks}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={styles.list}
+                extraData={completedHabitIds}
+              />
+            )}
+          </Animated.View>
+        </GestureDetector>
       </View>
 
       <Pressable style={styles.fab} onPress={openModal}>
@@ -134,6 +177,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   listWrapper: {
+    flex: 1,
+  },
+  gestureArea: {
     flex: 1,
   },
   list: {
