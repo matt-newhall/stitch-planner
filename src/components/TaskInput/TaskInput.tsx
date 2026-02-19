@@ -62,15 +62,18 @@ const TaskInput = ({ onSubmit, defaultDate }: Props) => {
 
   return (
     <View>
-      {pickerVisible && (
-        <Animated.View style={[styles.pickerPanel, { opacity: pickerAnim, transform: [{ translateY }] }]}>
-          <DaySelector
-            selectedDate={scheduledDate}
-            onSelect={handleDateSelect}
-            contentContainerStyle={styles.dateSelectorContent}
-          />
-        </Animated.View>
-      )}
+      <View style={styles.pickerPanel}>
+        <View style={styles.divider} />
+        {pickerVisible && (
+          <Animated.View style={[{ opacity: pickerAnim, transform: [{ translateY }] }]}>
+            <DaySelector
+              selectedDate={scheduledDate}
+              onSelect={handleDateSelect}
+              contentContainerStyle={styles.dateSelectorContent}
+            />
+          </Animated.View>
+        )}
+      </View>
       <View style={styles.wrapper}>
         <View style={styles.pill}>
           <MaterialCommunityIcons name="plus" color={colors.textSecondary} size={22} />
@@ -98,7 +101,21 @@ const TaskInput = ({ onSubmit, defaultDate }: Props) => {
 }
 
 const styles = StyleSheet.create({
-  pickerPanel: {},
+  pickerPanel: {
+    position: 'absolute',
+    bottom: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: colors.background,
+  },
+  divider: {
+    width: '70%',
+    alignSelf: 'center',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.textSecondary,
+    opacity: 0.4,
+    marginTop: 16,
+  },
   dateSelectorContent: {
     paddingHorizontal: 0,
     paddingBottom: 2,

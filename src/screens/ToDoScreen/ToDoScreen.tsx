@@ -121,7 +121,6 @@ const ToDoScreen = () => {
           </Animated.View>
         </GestureDetector>
       </View>
-      <View style={[styles.divider, styles.dividerBottom]} />
       <TaskInput onSubmit={handleAdd} defaultDate={selectedDate} />
       <ConfettiCannon
         ref={confettiRef}
@@ -160,10 +159,7 @@ const styles = StyleSheet.create({
   dividerTop: {
     marginVertical: 2,
   },
-  dividerBottom: {
-    marginBottom: 2,
-    marginTop: 16,
-  },
+
 })
 
 export default ToDoScreen
