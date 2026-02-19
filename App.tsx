@@ -5,7 +5,7 @@ import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold, Inter_900
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ActivityIndicator, View } from 'react-native'
 import { useEffect, useState } from 'react'
-import { colors } from './src/constants'
+import { COLORS } from './src/constants/theme'
 import { RootNavigator } from './src/navigation'
 import { useTodoStore } from './src/state'
 
@@ -13,11 +13,11 @@ const navTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    background: colors.background,
-    card: colors.navbar,
-    primary: colors.accent,
-    text: colors.text,
-    border: colors.navbar,
+    background: COLORS.background,
+    card: COLORS.navbar,
+    primary: COLORS.accent,
+    text: COLORS.text,
+    border: COLORS.navbar,
   },
 }
 
@@ -48,8 +48,8 @@ const App = () => {
 
   if (!fontsLoaded || !storesHydrated) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-        <ActivityIndicator color={colors.accent} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background }}>
+        <ActivityIndicator color={COLORS.accent} />
       </View>
     )
   }

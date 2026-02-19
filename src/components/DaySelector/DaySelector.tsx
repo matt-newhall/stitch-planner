@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import { getDayOptions } from '../../utils'
 
 type DayOption = {
@@ -75,18 +75,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
   },
   chipActive: {
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
   },
   label: {
     fontSize: 14,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
   labelActive: {
-    color: colors.background,
+    color: COLORS.background,
   },
 })
 

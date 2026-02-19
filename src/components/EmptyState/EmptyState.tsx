@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import { EmptyStateVariant } from '../../types'
 
 type Props = {
@@ -15,7 +15,7 @@ const EmptyState = ({ variant }: Props) => (
     <MaterialCommunityIcons
       name={variant === EmptyStateVariant.AllDone ? 'check-all' : 'weather-night'}
       size={64}
-      color={colors.accent}
+      color={COLORS.accent}
       style={styles.icon}
     />
     <Text style={styles.message}>
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 15,
-    color: colors.textSecondary,
-    fontFamily: fonts.regular,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.regular,
   },
 })
 

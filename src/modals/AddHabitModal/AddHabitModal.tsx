@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   Animated,
-  Dimensions,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -12,14 +11,14 @@ import {
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
+import { SCREEN_HEIGHT } from '../../constants/layout'
 import { todayISO } from '../../utils'
 import type { HabitCadence, HabitDraft } from '../../types'
 import AddHabitDetails from './AddHabitDetails'
 import AddHabitCadence from './AddHabitCadence'
 import useAddHabitModal from './AddHabitModal.hook'
 
-const SCREEN_HEIGHT = Dimensions.get('window').height
 const ANIM_DURATION = 300
 const STEP_DURATION = 180
 
@@ -134,14 +133,14 @@ const AddHabitModal = ({ visible, onClose, onSubmit }: Props) => {
           <View style={styles.header}>
             {step === 2 ? (
               <Pressable onPress={() => transitionStep(1)} hitSlop={8}>
-                <MaterialCommunityIcons name="chevron-left" color={colors.text} size={28} />
+                <MaterialCommunityIcons name="chevron-left" color={COLORS.text} size={28} />
               </Pressable>
             ) : (
               <View style={styles.headerSpacer} />
             )}
             <Text style={styles.headerTitle}>{step === 1 ? 'New Habit' : 'Repeat'}</Text>
             <Pressable onPress={animateClose} hitSlop={8}>
-              <MaterialCommunityIcons name="close" color={colors.text} size={24} />
+              <MaterialCommunityIcons name="close" color={COLORS.text} size={24} />
             </Pressable>
           </View>
 
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   sheet: {
-    backgroundColor: colors.surface,
+    backgroundColor: COLORS.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: '85%',
@@ -204,11 +203,11 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: colors.text,
-    fontFamily: fonts.bold,
+    color: COLORS.text,
+    fontFamily: FONTS.bold,
   },
   actionButton: {
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
     marginHorizontal: 20,
     marginTop: 12,
     marginBottom: 32,
@@ -218,8 +217,8 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: 16,
-    color: colors.background,
-    fontFamily: fonts.bold,
+    color: COLORS.background,
+    fontFamily: FONTS.bold,
   },
 })
 

@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, Dimensions, Keyboard, Platform, StyleSheet, View } from 'react-native'
+import { Animated, Keyboard, Platform, StyleSheet, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import * as Haptics from 'expo-haptics'
 import { useNavigation } from '@react-navigation/native'
 import { TaskItem, TaskInput, DaySelector, EmptyState, StreakBadge } from '../../components'
-import { colors } from '../../constants'
+import { COLORS } from '../../constants/theme'
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
 import type { Task } from '../../types'
 import useToDoScreen from './ToDoScreen.hook'
 import { shiftDate, todayISO } from '../../utils'
 
-const SCREEN_WIDTH = Dimensions.get('window').width
-const SCREEN_HEIGHT = Dimensions.get('window').height
-const CONFETTI_COLORS = [colors.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
+const CONFETTI_COLORS = [COLORS.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
 
 const ToDoScreen = () => {
   const navigation = useNavigation()
@@ -138,7 +137,7 @@ const ToDoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: COLORS.background,
   },
   listWrapper: {
     flex: 1,
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'center',
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.textSecondary,
+    backgroundColor: COLORS.textSecondary,
     opacity: 0.4,
   },
   dividerTop: {

@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, Pressable, View } from 'react-native'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import { HabitCadenceOption } from '../../types'
 import type { HabitCadence } from '../../types'
 
@@ -94,18 +94,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 16,
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
   },
   presetChipActive: {
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
   },
   presetChipText: {
     fontSize: 13,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
   presetChipTextActive: {
-    color: colors.background,
+    color: COLORS.background,
   },
   dowRow: {
     flexDirection: 'row',
@@ -118,21 +118,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
   },
   dowChipActive: {
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
   },
   dowChipDisabled: {
     opacity: 0.3,
   },
   dowChipText: {
     fontSize: 12,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
   dowChipTextActive: {
-    color: colors.background,
+    color: COLORS.background,
   },
 })
 

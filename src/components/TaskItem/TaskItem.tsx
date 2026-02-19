@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import type { Task } from '../../types'
 
 type Props = {
@@ -38,7 +38,7 @@ const TaskItem = ({ task, onToggle, onDelete }: Props) => {
     return (
       <Animated.View style={[styles.deleteAction, { opacity }]}>
         <Pressable onPress={onDelete} style={styles.deleteButton}>
-          <MaterialCommunityIcons name="trash-can-outline" color={colors.text} size={22} />
+          <MaterialCommunityIcons name="trash-can-outline" color={COLORS.text} size={22} />
         </Pressable>
       </Animated.View>
     )
@@ -55,7 +55,7 @@ const TaskItem = ({ task, onToggle, onDelete }: Props) => {
             <Animated.View style={{ transform: [{ scale: checkScale }] }}>
               <MaterialCommunityIcons
                 name={task.completed ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
-                color={task.completed ? colors.accent : colors.textSecondary}
+                color={task.completed ? COLORS.accent : COLORS.textSecondary}
                 size={26}
               />
             </Animated.View>
@@ -76,19 +76,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
     borderRadius: 12,
     gap: 12,
   },
   title: {
     flex: 1,
     fontSize: 16,
-    color: colors.text,
-    fontFamily: fonts.regular,
+    color: COLORS.text,
+    fontFamily: FONTS.regular,
   },
   completed: {
     textDecorationLine: 'line-through',
-    color: colors.textSecondary,
+    color: COLORS.textSecondary,
   },
   deleteAction: {
     justifyContent: 'center',

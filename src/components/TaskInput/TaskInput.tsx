@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import { getDayLabel } from '../../utils'
 import DaySelector from '../DaySelector/DaySelector'
 
@@ -76,11 +76,11 @@ const TaskInput = ({ onSubmit, defaultDate }: Props) => {
       </View>
       <View style={styles.wrapper}>
         <View style={styles.pill}>
-          <MaterialCommunityIcons name="plus" color={colors.textSecondary} size={22} />
+          <MaterialCommunityIcons name="plus" color={COLORS.textSecondary} size={22} />
           <TextInput
             style={styles.input}
             placeholder="Add a task..."
-            placeholderTextColor={colors.textSecondary}
+            placeholderTextColor={COLORS.textSecondary}
             value={text}
             onChangeText={setText}
             onSubmitEditing={handleSubmit}
@@ -106,13 +106,13 @@ const styles = StyleSheet.create({
     bottom: '100%',
     left: 0,
     right: 0,
-    backgroundColor: colors.background,
+    backgroundColor: COLORS.background,
   },
   divider: {
     width: '70%',
     alignSelf: 'center',
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.textSecondary,
+    backgroundColor: COLORS.textSecondary,
     opacity: 0.4,
     marginTop: 16,
   },
@@ -122,33 +122,33 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: colors.background,
+    backgroundColor: COLORS.background,
   },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
     borderRadius: 12,
     gap: 12,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: colors.text,
-    fontFamily: fonts.regular,
+    color: COLORS.text,
+    fontFamily: FONTS.regular,
   },
   dateChip: {
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 8,
-    backgroundColor: colors.surface,
+    backgroundColor: COLORS.surface,
   },
   dateChipText: {
     fontSize: 12,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
 })
 

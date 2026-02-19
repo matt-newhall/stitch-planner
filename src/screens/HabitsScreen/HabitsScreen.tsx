@@ -1,19 +1,17 @@
 import { useCallback, useMemo, useRef } from 'react'
-import { Animated, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { DaySelector, HabitCard } from '../../components'
 import { AddHabitModal } from '../../modals'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
 import { getDayOptions } from '../../utils'
 import type { HabitStack } from '../../types'
 import useHabitsScreen from './HabitsScreen.hook'
 
-const SCREEN_WIDTH = Dimensions.get('window').width
-const SCREEN_HEIGHT = Dimensions.get('window').height
-
-const CONFETTI_COLORS = [colors.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
+const CONFETTI_COLORS = [COLORS.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
 const EMOJI_X_FRACTIONS = [0.15, 0.32, 0.5, 0.68, 0.85]
 
 const HabitsScreen = () => {
@@ -93,7 +91,7 @@ const HabitsScreen = () => {
       </View>
 
       <Pressable style={styles.fab} onPress={openModal}>
-        <MaterialCommunityIcons name="plus" color={colors.background} size={28} />
+        <MaterialCommunityIcons name="plus" color={COLORS.background} size={28} />
       </Pressable>
 
       <AddHabitModal
@@ -134,7 +132,7 @@ const HabitsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: COLORS.background,
   },
   listWrapper: {
     flex: 1,
@@ -149,14 +147,14 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: colors.textSecondary,
-    fontFamily: fonts.regular,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.regular,
   },
   divider: {
     width: '70%',
     alignSelf: 'center',
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.textSecondary,
+    backgroundColor: COLORS.textSecondary,
     opacity: 0.4,
   },
   dividerTop: {
@@ -169,7 +167,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.accent,
+    backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,

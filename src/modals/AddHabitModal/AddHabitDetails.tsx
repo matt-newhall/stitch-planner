@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import type { HabitDraft } from '../../types'
 
 type Props = {
@@ -35,7 +35,7 @@ const AddHabitDetails = ({
     <TextInput
       style={styles.input}
       placeholder="Behaviour (e.g. read for 10 minutes)"
-      placeholderTextColor={colors.textSecondary}
+      placeholderTextColor={COLORS.textSecondary}
       value={habits[0].behaviour ?? ''}
       onChangeText={(v) => onUpdateBehaviour(0, v)}
     />
@@ -44,7 +44,7 @@ const AddHabitDetails = ({
     <TextInput
       style={styles.input}
       placeholder="Time (e.g. when I wake up)"
-      placeholderTextColor={colors.textSecondary}
+      placeholderTextColor={COLORS.textSecondary}
       value={habits[0].time ?? ''}
       onChangeText={onUpdateTime}
     />
@@ -53,7 +53,7 @@ const AddHabitDetails = ({
     <TextInput
       style={styles.input}
       placeholder="Location (e.g. my bedroom)"
-      placeholderTextColor={colors.textSecondary}
+      placeholderTextColor={COLORS.textSecondary}
       value={habits[0].location ?? ''}
       onChangeText={onUpdateLocation}
     />
@@ -69,7 +69,7 @@ const AddHabitDetails = ({
             <Pressable onPress={() => onRemoveStack(index)} hitSlop={8}>
               <MaterialCommunityIcons
                 name="minus-circle-outline"
-                color={colors.textSecondary}
+                color={COLORS.textSecondary}
                 size={20}
               />
             </Pressable>
@@ -77,7 +77,7 @@ const AddHabitDetails = ({
           <TextInput
             style={styles.input}
             placeholder="Behaviour (e.g. make my bed)"
-            placeholderTextColor={colors.textSecondary}
+            placeholderTextColor={COLORS.textSecondary}
             value={habit.behaviour ?? ''}
             onChangeText={(v) => onUpdateBehaviour(index, v)}
           />
@@ -87,7 +87,7 @@ const AddHabitDetails = ({
 
     {canStack && (
       <Pressable style={styles.addStackButton} onPress={onAddStack}>
-        <MaterialCommunityIcons name="plus-circle-outline" color={colors.accent} size={20} />
+        <MaterialCommunityIcons name="plus-circle-outline" color={COLORS.accent} size={20} />
         <Text style={styles.addStackText}>Stack another habit</Text>
       </Pressable>
     )}
@@ -103,24 +103,24 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
     marginTop: 16,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
     borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 14,
     fontSize: 15,
-    color: colors.text,
-    fontFamily: fonts.regular,
+    color: COLORS.text,
+    fontFamily: FONTS.regular,
   },
   stackedSection: {
     marginTop: 20,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.navbar,
+    borderTopColor: COLORS.navbar,
     paddingTop: 16,
   },
   stackedHeader: {
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
   stackedLabel: {
     flex: 1,
     fontSize: 14,
-    color: colors.textSecondary,
-    fontFamily: fonts.semiBold,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
   addStackButton: {
     flexDirection: 'row',
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
   },
   addStackText: {
     fontSize: 14,
-    color: colors.accent,
-    fontFamily: fonts.semiBold,
+    color: COLORS.accent,
+    fontFamily: FONTS.semiBold,
   },
 })
 

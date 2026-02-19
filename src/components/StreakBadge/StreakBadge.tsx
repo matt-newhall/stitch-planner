@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { fonts } from '../../constants'
+import { FONTS } from '../../constants/theme'
 import { Flame } from '../../assets/svgs'
 
 type Props = {
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   count: {
     color: '#FF9500',
     fontSize: 18,
-    fontFamily: fonts.semiBold,
+    fontFamily: FONTS.semiBold,
   },
 })
 

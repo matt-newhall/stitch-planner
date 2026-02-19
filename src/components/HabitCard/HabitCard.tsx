@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../../constants'
+import { COLORS, FONTS } from '../../constants/theme'
 import type { HabitStack } from '../../types'
 
 type Props = {
@@ -22,7 +22,7 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
         <View style={styles.row}>
           <MaterialCommunityIcons
             name="lightning-bolt"
-            color={isCompleted ? colors.textSecondary : colors.accent}
+            color={isCompleted ? COLORS.textSecondary : COLORS.accent}
             size={20}
           />
           <Text style={[styles.sentence, isCompleted && styles.completedText]}>
@@ -35,7 +35,7 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
           </Text>
           <MaterialCommunityIcons
             name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
-            color={isCompleted ? colors.accent : colors.textSecondary}
+            color={isCompleted ? COLORS.accent : COLORS.textSecondary}
             size={20}
           />
         </View>
@@ -44,7 +44,7 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
           <View key={habit.id} style={styles.stackedRow}>
             <MaterialCommunityIcons
               name="link-variant"
-              color={colors.textSecondary}
+              color={COLORS.textSecondary}
               size={16}
             />
             <Text style={[styles.stackedSentence, isCompleted && styles.completedText]}>
@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
   card: {
     paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: colors.navbar,
+    backgroundColor: COLORS.navbar,
     borderRadius: 12,
     gap: 10,
   },
   cardCompleted: {
-    backgroundColor: colors.surface,
+    backgroundColor: COLORS.surface,
   },
   row: {
     flexDirection: 'row',
@@ -85,20 +85,20 @@ const styles = StyleSheet.create({
   sentence: {
     flex: 1,
     fontSize: 15,
-    color: colors.text,
-    fontFamily: fonts.regular,
+    color: COLORS.text,
+    fontFamily: FONTS.regular,
     lineHeight: 22,
   },
   highlight: {
-    color: colors.accent,
-    fontFamily: fonts.semiBold,
+    color: COLORS.accent,
+    fontFamily: FONTS.semiBold,
   },
   completedText: {
-    color: colors.textSecondary,
+    color: COLORS.textSecondary,
     textDecorationLine: 'line-through',
   },
   completedHighlight: {
-    color: colors.textSecondary,
+    color: COLORS.textSecondary,
   },
   stackedRow: {
     flexDirection: 'row',
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
   stackedSentence: {
     flex: 1,
     fontSize: 14,
-    color: colors.textSecondary,
-    fontFamily: fonts.regular,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.regular,
     lineHeight: 20,
   },
 })

@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { colors, fonts } from '../constants'
+import { COLORS, FONTS } from '../constants/theme'
 import { ToDoScreen, HabitsScreen } from '../screens'
 
 const Tab = createBottomTabNavigator()
@@ -9,14 +9,14 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: colors.navbar },
+        headerStyle: { backgroundColor: COLORS.navbar },
         headerTitleAlign: 'center',
-        headerTintColor: colors.text,
-        headerTitleStyle: { fontFamily: fonts.semiBold },
-        tabBarStyle: { backgroundColor: colors.navbar, borderTopColor: colors.navbar },
-        tabBarActiveTintColor: colors.accent,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarLabelStyle: { fontFamily: fonts.regular },
+        headerTintColor: COLORS.text,
+        headerTitleStyle: { fontFamily: FONTS.semiBold },
+        tabBarStyle: { backgroundColor: COLORS.navbar, borderTopColor: COLORS.navbar },
+        tabBarActiveTintColor: COLORS.accent,
+        tabBarInactiveTintColor: COLORS.textSecondary,
+        tabBarLabelStyle: { fontFamily: FONTS.regular },
       }}
     >
       <Tab.Screen
