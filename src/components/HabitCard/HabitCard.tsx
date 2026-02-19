@@ -11,14 +11,14 @@ type Props = {
 
 /**
  * Renders a habit stack as a card showing the anchor habit and any stacked habits.
- * Tapping the card toggles its completed state for the day.
+ * Only the checkbox button toggles its completed state for the day.
  */
 const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
   const [anchor, ...stacked] = habitStack.habits
 
   return (
     <View style={styles.wrapper}>
-      <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onToggle}>
+      <View style={[styles.card, isCompleted && styles.cardCompleted]}>
         <View style={styles.row}>
           <MaterialCommunityIcons
             name="lightning-bolt"
@@ -33,11 +33,6 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
             {' '}in{' '}
             <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.location}</Text>
           </Text>
-          <MaterialCommunityIcons
-            name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
-            color={isCompleted ? COLORS.accent : COLORS.textSecondary}
-            size={20}
-          />
         </View>
 
         {stacked.map((habit, index) => (
@@ -53,11 +48,21 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
                 {habitStack.habits[index].behaviour}
               </Text>
               , I will{' '}
-              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{habit.behaviour}</Text>
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
+                {habit.behaviour}
+              </Text>
             </Text>
           </View>
         ))}
-      </Pressable>
+
+        <Pressable onPress={onToggle} hitSlop={8} style={styles.checkbox}>
+          <MaterialCommunityIcons
+            name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+            color={isCompleted ? COLORS.accent : COLORS.textSecondary}
+            size={20}
+          />
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -73,6 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.navbar,
     borderRadius: 12,
     gap: 10,
+    paddingRight: 40,
   },
   cardCompleted: {
     backgroundColor: COLORS.surface,
@@ -99,6 +105,13 @@ const styles = StyleSheet.create({
   },
   completedHighlight: {
     color: COLORS.textSecondary,
+  },
+  checkbox: {
+    position: 'absolute',
+    right: 12,
+    top: '50%',
+    paddingVertical: 14,
+    transform: [{ translateY: -10 }],
   },
   stackedRow: {
     flexDirection: 'row',
