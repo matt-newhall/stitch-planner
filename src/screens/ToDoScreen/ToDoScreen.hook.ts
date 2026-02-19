@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppState } from 'react-native'
-import { useTodoStore } from '../../state'
-import { todayISO, computeStreak } from '../../utils'
-import { EmptyStateVariant } from '../../types'
+import useTodoStore from '../../state/todoStore'
+import { todayISO } from '../../utils/date'
+import { computeStreak } from '../../utils/streak'
+import { EmptyStateVariant } from '../../types/task'
 
 const AUTO_DELETE_DELAY = 3000
 

@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useHabitStore } from '../../state'
-import { isHabitStackDueOnDate, todayISO } from '../../utils'
-import type { Habit, HabitCadence, HabitDraft, HabitStack } from '../../types'
+import useHabitStore from '../../state/habitStore'
+import { todayISO } from '../../utils/date'
+import { isHabitStackDueOnDate } from '../../utils/habit'
+import type { Habit, HabitCadence, HabitDraft, HabitStack } from '../../types/habit'
 
 let nextId = 0
 const genId = () => `habit-${Date.now()}-${nextId++}`

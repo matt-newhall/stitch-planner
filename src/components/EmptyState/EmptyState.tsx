@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
-import { EmptyStateVariant } from '../../types'
+import { EmptyStateVariant } from '../../types/task'
 
 type Props = {
   readonly variant: EmptyStateVariant

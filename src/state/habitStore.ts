@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { HabitStack } from '../types'
+import type { HabitStack } from '../types/habit'
 import storageAdapter from './storage'
 
 type HabitState = {

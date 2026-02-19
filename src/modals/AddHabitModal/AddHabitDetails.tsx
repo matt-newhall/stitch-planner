@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, TextInput, Pressable, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
-import type { HabitDraft } from '../../types'
+import type { HabitDraft } from '../../types/habit'
 
 type Props = {
   readonly habits: HabitDraft[]

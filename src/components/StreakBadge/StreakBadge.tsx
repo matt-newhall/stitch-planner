@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { FONTS } from '../../constants/theme'
-import { Flame } from '../../assets/svgs'
+import Flame from '../../assets/Flame'
 
 type Props = {
   readonly count: number

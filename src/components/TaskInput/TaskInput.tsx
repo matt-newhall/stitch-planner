@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
-import { getDayLabel } from '../../utils'
+import { getDayLabel } from '../../utils/date'
 import DaySelector from '../DaySelector/DaySelector'
 
 type Props = {

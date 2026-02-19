@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { COLORS, FONTS } from '../../constants/theme'
-import { getDayOptions } from '../../utils'
+import { getDayOptions } from '../../utils/date'
 
 type DayOption = {
   readonly label: string

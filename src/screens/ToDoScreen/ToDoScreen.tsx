@@ -8,9 +8,9 @@ import { useNavigation } from '@react-navigation/native'
 import { TaskItem, TaskInput, DaySelector, EmptyState, StreakBadge } from '../../components'
 import { COLORS } from '../../constants/theme'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
-import type { Task } from '../../types'
+import type { Task } from '../../types/task'
 import useToDoScreen from './ToDoScreen.hook'
-import { shiftDate, todayISO } from '../../utils'
+import { shiftDate, todayISO } from '../../utils/date'
 
 const CONFETTI_COLORS = [COLORS.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
 

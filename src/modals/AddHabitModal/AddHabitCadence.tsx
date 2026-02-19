@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet, Text, Pressable, View } from 'react-native'
 import { COLORS, FONTS } from '../../constants/theme'
-import { HabitCadenceOption } from '../../types'
-import type { HabitCadence } from '../../types'
+import { HabitCadenceOption, type HabitCadence } from '../../types/habit'
 
 const CADENCE_PRESETS: { label: string; type: HabitCadenceOption }[] = [
   { label: 'Daily', type: HabitCadenceOption.Daily },

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { HabitCadenceOption } from '../../types'
-import type { HabitDraft } from '../../types'
+import { HabitCadenceOption, type HabitDraft } from '../../types/habit'
 
 const MAX_STACK_SIZE = 5
 

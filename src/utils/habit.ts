@@ -1,5 +1,5 @@
-import { HabitCadenceOption } from '../types'
-import type { HabitStack } from '../types'
+import { HabitCadenceOption } from '../types/habit'
+import type { HabitStack } from '../types/habit'
 
 /**
  * Returns true if a habit stack is due on the given ISO date.

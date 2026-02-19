@@ -6,8 +6,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { ActivityIndicator, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import { COLORS } from './src/constants/theme'
-import { RootNavigator } from './src/navigation'
-import { useTodoStore } from './src/state'
+import RootNavigator from './src/navigation/RootNavigator'
+import useTodoStore from './src/state/todoStore'
 
 const navTheme = {
   ...DarkTheme,

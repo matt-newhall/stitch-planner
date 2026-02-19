@@ -7,8 +7,8 @@ import { DaySelector, HabitCard } from '../../components'
 import { AddHabitModal } from '../../modals'
 import { COLORS, FONTS } from '../../constants/theme'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
-import { getDayOptions } from '../../utils'
-import type { HabitStack } from '../../types'
+import { getDayOptions } from '../../utils/date'
+import type { HabitStack } from '../../types/habit'
 import useHabitsScreen from './HabitsScreen.hook'
 
 const CONFETTI_COLORS = [COLORS.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']

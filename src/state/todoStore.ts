@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { Task } from '../types'
+import type { Task } from '../types/task'
 import storageAdapter from './storage'
-import { todayISO } from '../utils'
+import { todayISO } from '../utils/date'
 
 type TodoState = {
   readonly tasks: Task[]

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
-import type { HabitStack } from '../../types'
+import type { HabitStack } from '../../types/habit'
 
 type Props = {
   readonly habitStack: HabitStack
