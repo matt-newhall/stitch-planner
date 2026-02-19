@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { colors, fonts } from '../../constants'
+import { EmptyStateVariant } from '../../types'
 
 type Props = {
-  readonly variant: 'empty' | 'allDone'
+  readonly variant: EmptyStateVariant
 }
 
 /**
@@ -12,13 +13,13 @@ type Props = {
 const EmptyState = ({ variant }: Props) => (
   <View style={styles.container}>
     <MaterialCommunityIcons
-      name={variant === 'allDone' ? 'check-all' : 'weather-night'}
+      name={variant === EmptyStateVariant.AllDone ? 'check-all' : 'weather-night'}
       size={64}
       color={colors.accent}
       style={styles.icon}
     />
     <Text style={styles.message}>
-      {variant === 'allDone' ? 'Great job! Time to chill out' : 'Empty day today, chill out'}
+      {variant === EmptyStateVariant.AllDone ? 'Great job! Time to chill out' : 'Empty day today, chill out'}
     </Text>
   </View>
 )

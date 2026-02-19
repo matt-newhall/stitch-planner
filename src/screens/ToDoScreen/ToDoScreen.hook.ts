@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import { useTodoStore } from '../../state'
 import { todayISO, computeStreak } from '../../utils'
+import { EmptyStateVariant } from '../../types'
 
 const AUTO_DELETE_DELAY = 3000
 
@@ -39,10 +40,10 @@ const useToDoScreen = () => {
   const completedTasks = filteredTasks.filter((t) => t.completed)
   const sortedTasks = [...pendingTasks, ...completedTasks]
 
-  const emptyStateVariant: 'empty' | 'allDone' | null = (() => {
+  const emptyStateVariant: EmptyStateVariant | null = (() => {
     if (sortedTasks.length > 0 && pendingTasks.length > 0) return null
-    if (sortedTasks.some((t) => t.completed) || completedDays.includes(selectedDate)) return 'allDone'
-    return 'empty'
+    if (sortedTasks.some((t) => t.completed) || completedDays.includes(selectedDate)) return EmptyStateVariant.AllDone
+    return EmptyStateVariant.Empty
   })()
 
   const streakCount = useMemo(

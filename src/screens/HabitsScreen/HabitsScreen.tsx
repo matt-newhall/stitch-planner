@@ -1,13 +1,26 @@
+import { useMemo } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { AddHabitModal, HabitCard } from '../../components'
+import { DaySelector, HabitCard } from '../../components'
+import { AddHabitModal } from '../../modals'
 import { colors, fonts } from '../../constants'
+import { getDayOptions } from '../../utils'
 import type { HabitStack } from '../../types'
 import useHabitsScreen from './HabitsScreen.hook'
 
 const HabitsScreen = () => {
-  const { stacks, modalVisible, openModal, closeModal, addStack } = useHabitsScreen()
+  const {
+    selectedDateStacks,
+    selectedDate,
+    setSelectedDate,
+    modalVisible,
+    openModal,
+    closeModal,
+    addHabit,
+  } = useHabitsScreen()
+
+  const dayOptions = useMemo(() => getDayOptions(14), [])
 
   const renderItem = ({ item }: { item: HabitStack }) => (
     <HabitCard habitStack={item} />
@@ -15,19 +28,23 @@ const HabitsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {stacks.length === 0 ? (
-        <View style={styles.empty}>
-          <Text style={styles.emptyText}>No habits yet</Text>
-        </View>
-      ) : (
-        <FlashList
-          data={stacks}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
+      <View style={styles.listWrapper}>
+        <DaySelector selectedDate={selectedDate} onSelect={setSelectedDate} options={dayOptions} />
+        <View style={[styles.divider, styles.dividerTop]} />
 
-        />
-      )}
+        {selectedDateStacks.length === 0 ? (
+          <View style={styles.empty}>
+            <Text style={styles.emptyText}>No habits today</Text>
+          </View>
+        ) : (
+          <FlashList
+            data={selectedDateStacks}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+          />
+        )}
+      </View>
 
       <Pressable style={styles.fab} onPress={openModal}>
         <MaterialCommunityIcons name="plus" color={colors.background} size={28} />
@@ -36,7 +53,7 @@ const HabitsScreen = () => {
       <AddHabitModal
         visible={modalVisible}
         onClose={closeModal}
-        onSubmit={addStack}
+        onSubmit={addHabit}
       />
     </View>
   )
@@ -46,6 +63,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  listWrapper: {
+    flex: 1,
   },
   list: {
     paddingVertical: 8,
@@ -59,6 +79,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textSecondary,
     fontFamily: fonts.regular,
+  },
+  divider: {
+    width: '70%',
+    alignSelf: 'center',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.textSecondary,
+    opacity: 0.4,
+  },
+  dividerTop: {
+    marginVertical: 2,
   },
   fab: {
     position: 'absolute',

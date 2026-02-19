@@ -20,19 +20,22 @@ export const toISODateString = (date: Date): string => {
 export const todayISO = (): string => toISODateString(new Date())
 
 /**
- * Returns 7 day options starting from today.
+ * Returns day options starting from today.
  * Labels: "Today", "Tomorrow", then short weekday names (Mon, Tue, etc.)
+ * For count > 7, appends the date number to weekday labels to disambiguate (e.g. "Mon 24").
  */
-export const getDayOptions = (): DayOption[] => {
+export const getDayOptions = (count = 7): DayOption[] => {
   const today = new Date()
-  return Array.from({ length: 7 }, (_, i) => {
+  return Array.from({ length: count }, (_, i) => {
     const d = new Date(today)
     d.setDate(today.getDate() + i)
     const date = toISODateString(d)
+    const weekday = d.toLocaleDateString('en-GB', { weekday: 'short' })
     const label =
       i === 0 ? 'Today'
       : i === 1 ? 'Tomorrow'
-      : d.toLocaleDateString('en-GB', { weekday: 'short' })
+      : count > 7 ? `${weekday} ${d.getDate()}`
+      : weekday
     return { label, date }
   })
 }

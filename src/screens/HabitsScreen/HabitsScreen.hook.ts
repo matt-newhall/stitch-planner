@@ -1,43 +1,53 @@
 import { useState } from 'react'
-import type { Habit, HabitStack } from '../../types'
-
-type HabitDraft = {
-  behaviour: string
-  time: string
-  location: string
-}
+import { useHabitStore } from '../../state'
+import { isHabitStackDueOnDate, todayISO } from '../../utils'
+import type { Habit, HabitCadence, HabitDraft, HabitStack } from '../../types'
 
 let nextId = 0
 const genId = () => `habit-${Date.now()}-${nextId++}`
 
 /**
- * Manages local habit stack state and modal visibility for the HabitsScreen
+ * Manages habit state and modal visibility for the HabitsScreen.
+ * Persists stacks via Zustand and filters to habits due on the selected date.
  */
 const useHabitsScreen = () => {
-  const [stacks, setStacks] = useState<HabitStack[]>([])
   const [modalVisible, setModalVisible] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(todayISO())
+  const { stacks, addHabit } = useHabitStore()
+
+  const selectedDateStacks = stacks.filter((s) => isHabitStackDueOnDate(s, selectedDate))
 
   const openModal = () => setModalVisible(true)
   const closeModal = () => setModalVisible(false)
 
-  const addStack = (drafts: HabitDraft[]) => {
+  const handleAddHabit = (drafts: HabitDraft[], cadence: HabitCadence, startDate: string) => {
     const habits: Habit[] = drafts.map((d) => ({
       id: genId(),
-      behaviour: d.behaviour.trim(),
-      time: d.time.trim(),
-      location: d.location.trim(),
+      behaviour: d.behaviour?.trim() ?? '',
+      time: d.time?.trim() ?? '',
+      location: d.location?.trim() ?? '',
     }))
 
     const stack: HabitStack = {
       id: genId(),
       habits,
+      cadence,
+      startDate,
     }
 
-    setStacks((prev) => [stack, ...prev])
+    addHabit(stack)
     closeModal()
   }
 
-  return { stacks, modalVisible, openModal, closeModal, addStack }
+  return {
+    selectedDateStacks,
+    selectedDate,
+    setSelectedDate,
+    modalVisible,
+    openModal,
+    closeModal,
+    addHabit: handleAddHabit,
+  }
 }
 
 export default useHabitsScreen
