@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   dateSelectorContent: {
-    paddingHorizontal: 0,
     paddingBottom: 2,
   },
   wrapper: {
