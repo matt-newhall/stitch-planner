@@ -1,35 +1,43 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { colors, fonts } from '../../constants'
 import type { HabitStack } from '../../types'
 
 type Props = {
   readonly habitStack: HabitStack
+  readonly isCompleted: boolean
+  readonly onToggle: () => void
 }
 
 /**
- * Renders a habit stack as a card showing the anchor habit and any stacked habits
+ * Renders a habit stack as a card showing the anchor habit and any stacked habits.
+ * Tapping the card toggles its completed state for the day.
  */
-const HabitCard = ({ habitStack }: Props) => {
+const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
   const [anchor, ...stacked] = habitStack.habits
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.card}>
+      <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onToggle}>
         <View style={styles.row}>
           <MaterialCommunityIcons
             name="lightning-bolt"
-            color={colors.accent}
+            color={isCompleted ? colors.textSecondary : colors.accent}
             size={20}
           />
-          <Text style={styles.sentence}>
+          <Text style={[styles.sentence, isCompleted && styles.completedText]}>
             I will{' '}
-            <Text style={styles.highlight}>{anchor.behaviour}</Text>
+            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.behaviour}</Text>
             {' '}at{' '}
-            <Text style={styles.highlight}>{anchor.time}</Text>
+            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.time}</Text>
             {' '}in{' '}
-            <Text style={styles.highlight}>{anchor.location}</Text>
+            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.location}</Text>
           </Text>
+          <MaterialCommunityIcons
+            name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+            color={isCompleted ? colors.accent : colors.textSecondary}
+            size={20}
+          />
         </View>
 
         {stacked.map((habit, index) => (
@@ -39,17 +47,17 @@ const HabitCard = ({ habitStack }: Props) => {
               color={colors.textSecondary}
               size={16}
             />
-            <Text style={styles.stackedSentence}>
+            <Text style={[styles.stackedSentence, isCompleted && styles.completedText]}>
               After{' '}
-              <Text style={styles.highlight}>
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
                 {habitStack.habits[index].behaviour}
               </Text>
               , I will{' '}
-              <Text style={styles.highlight}>{habit.behaviour}</Text>
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{habit.behaviour}</Text>
             </Text>
           </View>
         ))}
-      </View>
+      </Pressable>
     </View>
   )
 }
@@ -66,6 +74,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 10,
   },
+  cardCompleted: {
+    backgroundColor: colors.surface,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -81,6 +92,13 @@ const styles = StyleSheet.create({
   highlight: {
     color: colors.accent,
     fontFamily: fonts.semiBold,
+  },
+  completedText: {
+    color: colors.textSecondary,
+    textDecorationLine: 'line-through',
+  },
+  completedHighlight: {
+    color: colors.textSecondary,
   },
   stackedRow: {
     flexDirection: 'row',

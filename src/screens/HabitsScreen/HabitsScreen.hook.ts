@@ -13,12 +13,17 @@ const genId = () => `habit-${Date.now()}-${nextId++}`
 const useHabitsScreen = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(todayISO())
-  const { stacks, addHabit } = useHabitStore()
+  const { stacks, addHabit, completedHabits, toggleHabitCompletion } = useHabitStore()
 
   const selectedDateStacks = stacks.filter((s) => isHabitStackDueOnDate(s, selectedDate))
+  const completedHabitIds = completedHabits[selectedDate] ?? []
 
   const openModal = () => setModalVisible(true)
   const closeModal = () => setModalVisible(false)
+
+  const handleToggleCompletion = (stackId: string) => {
+    toggleHabitCompletion(stackId, selectedDate)
+  }
 
   const handleAddHabit = (drafts: HabitDraft[], cadence: HabitCadence, startDate: string) => {
     const habits: Habit[] = drafts.map((d) => ({
@@ -47,6 +52,8 @@ const useHabitsScreen = () => {
     openModal,
     closeModal,
     addHabit: handleAddHabit,
+    completedHabitIds,
+    toggleCompletion: handleToggleCompletion,
   }
 }
 
