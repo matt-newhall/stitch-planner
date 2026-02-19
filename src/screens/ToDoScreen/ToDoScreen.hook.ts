@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { AppState } from 'react-native'
 import { useTodoStore } from '../../state'
-import { todayISO } from '../../utils'
+import { todayISO, computeStreak } from '../../utils'
 
 const AUTO_DELETE_DELAY = 3000
 
@@ -11,15 +12,24 @@ const useToDoScreen = () => {
   const [selectedDate, setSelectedDate] = useState(todayISO())
 
   const tasks = useTodoStore((s) => s.tasks)
-  const lastCompletionDate = useTodoStore((s) => s.lastCompletionDate)
+  const completedDays = useTodoStore((s) => s.completedDays)
+  const failedDays = useTodoStore((s) => s.failedDays)
   const addTask = useTodoStore((s) => s.addTask)
   const toggleTask = useTodoStore((s) => s.toggleTask)
   const deleteTask = useTodoStore((s) => s.deleteTask)
+  const reconcileDay = useTodoStore((s) => s.reconcileDay)
 
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
   useEffect(() => {
+    reconcileDay()
+
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') reconcileDay()
+    })
+
     return () => {
+      sub.remove()
       timersRef.current.forEach((timer) => clearTimeout(timer))
     }
   }, [])
@@ -31,9 +41,14 @@ const useToDoScreen = () => {
 
   const emptyStateVariant: 'empty' | 'allDone' | null = (() => {
     if (sortedTasks.length > 0 && pendingTasks.length > 0) return null
-    if (sortedTasks.some((t) => t.completed) || lastCompletionDate === selectedDate) return 'allDone'
+    if (sortedTasks.some((t) => t.completed) || completedDays.includes(selectedDate)) return 'allDone'
     return 'empty'
   })()
+
+  const streakCount = useMemo(
+    () => computeStreak(completedDays, failedDays),
+    [completedDays, failedDays],
+  )
 
   const handleAdd = useCallback((title: string, scheduledDate: string) => {
     timersRef.current.forEach((timer, id) => {
@@ -78,6 +93,7 @@ const useToDoScreen = () => {
   return {
     tasks: sortedTasks,
     emptyStateVariant,
+    streakCount,
     selectedDate,
     setSelectedDate,
     handleAdd,

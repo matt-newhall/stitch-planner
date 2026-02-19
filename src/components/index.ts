@@ -1,4 +1,5 @@
 export { default as EmptyState } from './EmptyState/EmptyState'
+export { default as StreakBadge } from './StreakBadge/StreakBadge'
 export { default as TaskItem } from './TaskItem/TaskItem'
 export { default as TaskInput } from './TaskInput/TaskInput'
 export { default as HabitCard } from './HabitCard/HabitCard'

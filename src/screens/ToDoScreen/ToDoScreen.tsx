@@ -4,7 +4,8 @@ import { FlashList } from '@shopify/flash-list'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import * as Haptics from 'expo-haptics'
-import { TaskItem, TaskInput, DaySelector, EmptyState } from '../../components'
+import { useNavigation } from '@react-navigation/native'
+import { TaskItem, TaskInput, DaySelector, EmptyState, StreakBadge } from '../../components'
 import { colors } from '../../constants'
 import type { Task } from '../../types'
 import useToDoScreen from './ToDoScreen.hook'
@@ -15,12 +16,19 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 const CONFETTI_COLORS = [colors.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
 
 const ToDoScreen = () => {
+  const navigation = useNavigation()
   const {
-    tasks, emptyStateVariant, selectedDate, setSelectedDate,
+    tasks, emptyStateVariant, streakCount, selectedDate, setSelectedDate,
     handleAdd, handleToggle, handleDelete,
   } = useToDoScreen()
 
   const [bottomPadding, setBottomPadding] = useState(0)
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <StreakBadge count={streakCount} />,
+    })
+  }, [streakCount])
 
   const confettiRef = useRef<ConfettiCannon>(null)
   const slideAnim = useRef(new Animated.Value(0)).current
