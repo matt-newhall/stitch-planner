@@ -41,10 +41,10 @@ const ToDoScreen = () => {
   const swipeGesture = useMemo(() =>
     Gesture.Pan()
       .activeOffsetX([-15, 15])
-      .failOffsetY([-10, 10])
+      .failOffsetY([-20, 20])
       .onEnd((event) => {
         const { translationX, velocityX } = event
-        if (Math.abs(velocityX) > 500 && Math.abs(translationX) > 60) {
+        if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
           const direction = translationX > 0 ? -1 : 1
           const next = shiftDate(selectedDateRef.current, direction)
           const today = todayISO()
@@ -67,6 +67,7 @@ const ToDoScreen = () => {
 
   useEffect(() => {
     if (swipeDirectionRef.current === 0) return
+    slideAnim.stopAnimation()
     slideAnim.setValue(swipeDirectionRef.current * SCREEN_WIDTH * 0.3)
     opacityAnim.setValue(0)
     Animated.parallel([
