@@ -43,8 +43,8 @@ const useToDoScreen = () => {
 
   const emptyStateVariant: EmptyStateVariant | null = (() => {
     if (sortedTasks.length > 0 && pendingTasks.length > 0) return null
-    if (sortedTasks.some((t) => t.completed) || completedDays.includes(selectedDate)) return EmptyStateVariant.AllDone
-    return EmptyStateVariant.Empty
+    if (sortedTasks.some((t) => t.completed) || completedDays.includes(selectedDate)) return EmptyStateVariant.TodoAllDone
+    return EmptyStateVariant.TodoEmpty
   })()
 
   const streakCount = useMemo(

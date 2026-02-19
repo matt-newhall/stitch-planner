@@ -1,6 +1,7 @@
 export enum EmptyStateVariant {
-  Empty = 'empty',
-  AllDone = 'allDone',
+  TodoEmpty = 'todoEmpty',
+  TodoAllDone = 'todoAllDone',
+  HabitsEmpty = 'habitsEmpty',
 }
 
 export type Task = {

@@ -7,22 +7,29 @@ type Props = {
   readonly variant: EmptyStateVariant
 }
 
+type VariantConfig = {
+  readonly icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']
+  readonly message: string
+}
+
+const VARIANT_CONFIG: Record<EmptyStateVariant, VariantConfig> = {
+  [EmptyStateVariant.TodoEmpty]: { icon: 'weather-night', message: 'Empty day today, chill out' },
+  [EmptyStateVariant.TodoAllDone]: { icon: 'check-all', message: 'Great job! Time to chill out' },
+  [EmptyStateVariant.HabitsEmpty]: { icon: 'calendar-blank-outline', message: 'No habits scheduled today' },
+}
+
 /**
- * Full-area empty state shown when no tasks are pending for the selected day.
+ * Full-area empty state shown when no items are available for the selected day.
  */
-const EmptyState = ({ variant }: Props) => (
-  <View style={styles.container}>
-    <MaterialCommunityIcons
-      name={variant === EmptyStateVariant.AllDone ? 'check-all' : 'weather-night'}
-      size={64}
-      color={COLORS.accent}
-      style={styles.icon}
-    />
-    <Text style={styles.message}>
-      {variant === EmptyStateVariant.AllDone ? 'Great job! Time to chill out' : 'Empty day today, chill out'}
-    </Text>
-  </View>
-)
+const EmptyState = ({ variant }: Props) => {
+  const { icon, message } = VARIANT_CONFIG[variant]
+  return (
+    <View style={styles.container}>
+      <MaterialCommunityIcons name={icon} size={64} color={COLORS.accent} style={styles.icon} />
+      <Text style={styles.message}>{message}</Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

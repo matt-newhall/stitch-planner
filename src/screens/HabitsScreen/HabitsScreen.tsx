@@ -3,12 +3,13 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import ConfettiCannon from 'react-native-confetti-cannon'
-import { DaySelector, HabitCard } from '../../components'
+import { DaySelector, EmptyState, HabitCard } from '../../components'
 import { AddHabitModal } from '../../modals'
-import { COLORS, FONTS } from '../../constants/theme'
+import { COLORS } from '../../constants/theme'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
 import { getDayOptions } from '../../utils/date'
 import type { HabitStack } from '../../types/habit'
+import { EmptyStateVariant } from '../../types/task'
 import useHabitsScreen from './HabitsScreen.hook'
 
 const CONFETTI_COLORS = [COLORS.accent, '#F3E5F5', '#CE93D8', '#E1BEE7', '#FFFFFF']
@@ -76,9 +77,7 @@ const HabitsScreen = () => {
         <View style={[styles.divider, styles.dividerTop]} />
 
         {selectedDateStacks.length === 0 ? (
-          <View style={styles.empty}>
-            <Text style={styles.emptyText}>No habits today</Text>
-          </View>
+          <EmptyState variant={EmptyStateVariant.HabitsEmpty} />
         ) : (
           <FlashList
             data={selectedDateStacks}
@@ -139,16 +138,6 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingVertical: 8,
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: COLORS.textSecondary,
-    fontFamily: FONTS.regular,
   },
   divider: {
     width: '70%',
