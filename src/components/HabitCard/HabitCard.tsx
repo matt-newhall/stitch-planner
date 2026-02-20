@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useRef } from 'react'
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
 import type { HabitStack } from '../../types/habit'
@@ -6,19 +7,36 @@ import type { HabitStack } from '../../types/habit'
 type Props = {
   readonly habitStack: HabitStack
   readonly isCompleted: boolean
+  readonly isExpanded: boolean
   readonly onToggle: () => void
+  readonly onExpand: () => void
+  readonly onEditPress: () => void
+  readonly onDeletePress: () => void
 }
 
 /**
  * Renders a habit stack as a card showing the anchor habit and any stacked habits.
- * Only the checkbox button toggles its completed state for the day.
+ * Tap the card body to reveal Edit and Delete actions below with an animated expand.
+ * The checkbox toggles completion for the day without expanding.
  */
-const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
+const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, onEditPress, onDeletePress }: Props) => {
   const [anchor, ...stacked] = habitStack.habits
+
+  const expandAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current
+  const fadeAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current
+
+  useEffect(() => {
+    const duration = isExpanded ? 220 : 160
+    Animated.timing(expandAnim, { toValue: isExpanded ? 1 : 0, duration, useNativeDriver: false }).start()
+    Animated.timing(fadeAnim, { toValue: isExpanded ? 1 : 0, duration, useNativeDriver: true }).start()
+  }, [isExpanded])
+
+  const actionHeight = expandAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 44] })
+  const actionTranslateY = fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [8, 0] })
 
   return (
     <View style={styles.wrapper}>
-      <View style={[styles.card, isCompleted && styles.cardCompleted]}>
+      <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onExpand}>
         <View style={styles.row}>
           <MaterialCommunityIcons
             name="lightning-bolt"
@@ -62,7 +80,22 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
             size={20}
           />
         </Pressable>
-      </View>
+      </Pressable>
+
+      <Animated.View style={[styles.actionsContainer, { height: actionHeight, overflow: 'hidden' }]}>
+        <Animated.View
+          style={[styles.actions, { opacity: fadeAnim, transform: [{ translateY: actionTranslateY }] }]}
+        >
+          <Pressable style={styles.actionButton} onPress={onEditPress}>
+            <MaterialCommunityIcons name="pencil-outline" color={COLORS.textSecondary} size={15} />
+            <Text style={styles.actionText}>Edit</Text>
+          </Pressable>
+          <Pressable style={styles.actionButton} onPress={onDeletePress}>
+            <MaterialCommunityIcons name="trash-can-outline" color={COLORS.textSecondary} size={15} />
+            <Text style={styles.actionText}>Delete</Text>
+          </Pressable>
+        </Animated.View>
+      </Animated.View>
     </View>
   )
 }
@@ -70,7 +103,8 @@ const HabitCard = ({ habitStack, isCompleted, onToggle }: Props) => {
 const styles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: 16,
-    paddingVertical: 7,
+    paddingTop: 7,
+    paddingBottom: 0,
   },
   card: {
     paddingVertical: 14,
@@ -125,6 +159,30 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontFamily: FONTS.regular,
     lineHeight: 20,
+  },
+  actionsContainer: {
+    overflow: 'hidden',
+  },
+  actions: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingTop: 6,
+    paddingBottom: 6,
+    height: 44,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderRadius: 8,
+    backgroundColor: COLORS.surface,
+  },
+  actionText: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+    fontFamily: FONTS.semiBold,
   },
 })
 

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
-import { FlashList } from '@shopify/flash-list'
+import { Animated, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import * as Haptics from 'expo-haptics'
 import { DaySelector, EmptyState, HabitCard } from '../../components'
-import { AddHabitModal } from '../../modals'
+import { AddHabitModal, EditHabitModal, DeleteConfirmSheet } from '../../modals'
 import { COLORS } from '../../constants/theme'
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../constants/layout'
 import { getDayOptions, shiftDate, todayISO } from '../../utils/date'
@@ -22,12 +21,22 @@ const HabitsScreen = () => {
     selectedDateStacks,
     selectedDate,
     setSelectedDate,
-    modalVisible,
-    openModal,
-    closeModal,
+    addModalVisible,
+    editModalVisible,
+    deleteSheetVisible,
+    openAddModal,
+    closeAddModal,
+    closeEditModal,
     addHabit,
     completedHabitIds,
     toggleCompletion,
+    expandedCardId,
+    editingStack,
+    handleCardExpand,
+    handleEditPress,
+    handleDeletePress,
+    handleDeleteConfirm,
+    handleDeleteCancel,
   } = useHabitsScreen()
 
   const dayOptions = useMemo(() => getDayOptions(14), [])
@@ -88,8 +97,8 @@ const HabitsScreen = () => {
           Animated.timing(anim.opacity, { toValue: 0, duration: 400, useNativeDriver: true }),
         ]),
       ]).start(() => {
-      anim.opacity.setValue(0)
-    })
+        anim.opacity.setValue(0)
+      })
     })
   }, [emojiAnims])
 
@@ -101,13 +110,17 @@ const HabitsScreen = () => {
     toggleCompletion(stackId)
   }, [completedHabitIds, toggleCompletion, fireEmojis])
 
-  const renderItem = ({ item }: { item: HabitStack }) => (
+  const renderItem = useCallback(({ item }: { item: HabitStack }) => (
     <HabitCard
       habitStack={item}
       isCompleted={completedHabitIds.includes(item.id)}
+      isExpanded={expandedCardId === item.id}
       onToggle={() => handleToggleWithCelebration(item.id)}
+      onExpand={() => handleCardExpand(item.id)}
+      onEditPress={() => handleEditPress(item)}
+      onDeletePress={() => handleDeletePress(item.id)}
     />
-  )
+  ), [completedHabitIds, expandedCardId, handleToggleWithCelebration, handleCardExpand, handleEditPress, handleDeletePress])
 
   return (
     <View style={styles.container}>
@@ -120,26 +133,38 @@ const HabitsScreen = () => {
             {selectedDateStacks.length === 0 ? (
               <EmptyState variant={EmptyStateVariant.HabitsEmpty} />
             ) : (
-              <FlashList
+              <FlatList
                 data={selectedDateStacks}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.list}
-                extraData={completedHabitIds}
+                extraData={[completedHabitIds, expandedCardId]}
               />
             )}
           </Animated.View>
         </GestureDetector>
       </View>
 
-      <Pressable style={styles.fab} onPress={openModal}>
+      <Pressable style={styles.fab} onPress={openAddModal}>
         <MaterialCommunityIcons name="plus" color={COLORS.background} size={28} />
       </Pressable>
 
       <AddHabitModal
-        visible={modalVisible}
-        onClose={closeModal}
+        visible={addModalVisible}
+        onClose={closeAddModal}
         onSubmit={addHabit}
+      />
+
+      <EditHabitModal
+        visible={editModalVisible}
+        habitStack={editingStack}
+        onClose={closeEditModal}
+      />
+
+      <DeleteConfirmSheet
+        visible={deleteSheetVisible}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
       />
 
       {EMOJI_X_FRACTIONS.map((xFraction, i) => (

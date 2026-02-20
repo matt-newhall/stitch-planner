@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { HabitCadenceOption, type HabitDraft } from '../../types/habit'
+import { HabitCadenceOption, type HabitDraft, type HabitStack } from '../../types/habit'
 
 const MAX_STACK_SIZE = 5
 
@@ -18,10 +18,10 @@ const defaultDaysForType = (type: HabitCadenceOption): number[] => {
 }
 
 /**
- * Manages form state for AddHabitModal — habits, cadence, and day selection.
- * Animation and step state live in the component.
+ * Manages form state for habit modals — habits, cadence, and day selection.
+ * Supports pre-populating from an existing HabitStack for edit flows via populate().
  */
-const useAddHabitModal = () => {
+const useHabitModal = () => {
   const [habits, setHabits] = useState<HabitDraft[]>([{}])
   const [cadenceType, setCadenceType] = useState<HabitCadenceOption>(HabitCadenceOption.Daily)
   const [selectedDays, setSelectedDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6])
@@ -30,6 +30,12 @@ const useAddHabitModal = () => {
     setHabits([{}])
     setCadenceType(HabitCadenceOption.Daily)
     setSelectedDays([0, 1, 2, 3, 4, 5, 6])
+  }
+
+  const populate = (stack: HabitStack) => {
+    setHabits(stack.habits.map((h) => ({ behaviour: h.behaviour, time: h.time, location: h.location })))
+    setCadenceType(stack.cadence.type)
+    setSelectedDays([...stack.cadence.days])
   }
 
   const updateField = (index: number, field: keyof HabitDraft, value: string) =>
@@ -74,6 +80,7 @@ const useAddHabitModal = () => {
     selectedDays,
     canStack: habits.length < MAX_STACK_SIZE,
     reset,
+    populate,
     updateBehaviour,
     updateTime,
     updateLocation,
@@ -84,4 +91,4 @@ const useAddHabitModal = () => {
   }
 }
 
-export default useAddHabitModal
+export default useHabitModal

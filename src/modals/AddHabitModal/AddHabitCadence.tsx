@@ -29,7 +29,7 @@ const isDayDisabled = (type: HabitCadenceOption, day: number): boolean => {
 
 type Props = {
   readonly cadenceType: HabitCadence['type']
-  readonly selectedDays: number[]
+  readonly selectedDays: readonly number[]
   readonly onPresetPress: (type: HabitCadenceOption) => void
   readonly onDayToggle: (day: number) => void
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useHabitStore from '../../state/habitStore'
 import { todayISO } from '../../utils/date'
 import { isHabitStackDueOnDate } from '../../utils/habit'
@@ -8,19 +8,31 @@ let nextId = 0
 const genId = () => `habit-${Date.now()}-${nextId++}`
 
 /**
- * Manages habit state and modal visibility for the HabitsScreen.
+ * Manages habit state, modal visibility, and card expansion for HabitsScreen.
  * Persists stacks via Zustand and filters to habits due on the selected date.
+ * Expanded card collapses automatically on date change.
  */
 const useHabitsScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false)
+  const [addModalVisible, setAddModalVisible] = useState(false)
+  const [editModalVisible, setEditModalVisible] = useState(false)
+  const [deleteSheetVisible, setDeleteSheetVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(todayISO())
-  const { stacks, addHabit, completedHabits, toggleHabitCompletion } = useHabitStore()
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
+  const [editingStack, setEditingStack] = useState<HabitStack | null>(null)
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
+
+  const { stacks, addHabit, removeHabit, completedHabits, toggleHabitCompletion } = useHabitStore()
 
   const selectedDateStacks = stacks.filter((s) => isHabitStackDueOnDate(s, selectedDate))
   const completedHabitIds = completedHabits[selectedDate] ?? []
 
-  const openModal = () => setModalVisible(true)
-  const closeModal = () => setModalVisible(false)
+  useEffect(() => {
+    setExpandedCardId(null)
+  }, [selectedDate])
+
+  const openAddModal = () => setAddModalVisible(true)
+  const closeAddModal = () => setAddModalVisible(false)
+  const closeEditModal = () => setEditModalVisible(false)
 
   const handleToggleCompletion = (stackId: string) => {
     toggleHabitCompletion(stackId, selectedDate)
@@ -42,19 +54,56 @@ const useHabitsScreen = () => {
     }
 
     addHabit(stack)
-    closeModal()
+    closeAddModal()
+  }
+
+  const handleCardExpand = (id: string) => {
+    setExpandedCardId((prev) => (prev === id ? null : id))
+  }
+
+  const handleEditPress = (stack: HabitStack) => {
+    setEditingStack(stack)
+    setEditModalVisible(true)
+    setExpandedCardId(null)
+  }
+
+  const handleDeletePress = (id: string) => {
+    setDeleteTargetId(id)
+    setDeleteSheetVisible(true)
+    setExpandedCardId(null)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (deleteTargetId) removeHabit(deleteTargetId)
+    setDeleteTargetId(null)
+    setDeleteSheetVisible(false)
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteTargetId(null)
+    setDeleteSheetVisible(false)
   }
 
   return {
     selectedDateStacks,
     selectedDate,
     setSelectedDate,
-    modalVisible,
-    openModal,
-    closeModal,
+    addModalVisible,
+    editModalVisible,
+    deleteSheetVisible,
+    openAddModal,
+    closeAddModal,
+    closeEditModal,
     addHabit: handleAddHabit,
     completedHabitIds,
     toggleCompletion: handleToggleCompletion,
+    expandedCardId,
+    editingStack,
+    handleCardExpand,
+    handleEditPress,
+    handleDeletePress,
+    handleDeleteConfirm,
+    handleDeleteCancel,
   }
 }
 
