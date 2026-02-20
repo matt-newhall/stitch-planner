@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Animated, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { scheduleOnRN } from 'react-native-worklets'
+import DraggableFlatList, { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import * as Haptics from 'expo-haptics'
@@ -37,6 +39,7 @@ const HabitsScreen = () => {
     handleDeletePress,
     handleDeleteConfirm,
     handleDeleteCancel,
+    handleReorderHabits,
   } = useHabitsScreen()
 
   const dayOptions = useMemo(() => getDayOptions(14), [])
@@ -48,24 +51,26 @@ const HabitsScreen = () => {
 
   selectedDateRef.current = selectedDate
 
-  const swipeGesture = useMemo(() =>
-    Gesture.Pan()
+  const swipeGesture = useMemo(() => {
+    const handleSwipeEnd = (translationX: number, velocityX: number) => {
+      if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
+        const direction = translationX > 0 ? -1 : 1
+        const next = shiftDate(selectedDateRef.current, direction)
+        const today = todayISO()
+        const max = shiftDate(today, 13)
+        if (next < today || next > max) return
+        swipeDirectionRef.current = direction
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+        setSelectedDate(next)
+      }
+    }
+    return Gesture.Pan()
       .activeOffsetX([-15, 15])
       .failOffsetY([-20, 20])
       .onEnd((event) => {
-        const { translationX, velocityX } = event
-        if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
-          const direction = translationX > 0 ? -1 : 1
-          const next = shiftDate(selectedDateRef.current, direction)
-          const today = todayISO()
-          const max = shiftDate(today, 13)
-          if (next < today || next > max) return
-          swipeDirectionRef.current = direction
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-          setSelectedDate(next)
-        }
+        scheduleOnRN(handleSwipeEnd, event.translationX, event.velocityX)
       })
-  , [])
+  }, [])
 
   useEffect(() => {
     if (swipeDirectionRef.current === 0) return
@@ -110,16 +115,19 @@ const HabitsScreen = () => {
     toggleCompletion(stackId)
   }, [completedHabitIds, toggleCompletion, fireEmojis])
 
-  const renderItem = useCallback(({ item }: { item: HabitStack }) => (
-    <HabitCard
-      habitStack={item}
-      isCompleted={completedHabitIds.includes(item.id)}
-      isExpanded={expandedCardId === item.id}
-      onToggle={() => handleToggleWithCelebration(item.id)}
-      onExpand={() => handleCardExpand(item.id)}
-      onEditPress={() => handleEditPress(item)}
-      onDeletePress={() => handleDeletePress(item.id)}
-    />
+  const renderItem = useCallback(({ item, drag }: RenderItemParams<HabitStack>) => (
+    <ScaleDecorator>
+      <HabitCard
+        habitStack={item}
+        isCompleted={completedHabitIds.includes(item.id)}
+        isExpanded={expandedCardId === item.id}
+        onToggle={() => handleToggleWithCelebration(item.id)}
+        onExpand={() => handleCardExpand(item.id)}
+        onEditPress={() => handleEditPress(item)}
+        onDeletePress={() => handleDeletePress(item.id)}
+        onLongPress={expandedCardId === null ? drag : undefined}
+      />
+    </ScaleDecorator>
   ), [completedHabitIds, expandedCardId, handleToggleWithCelebration, handleCardExpand, handleEditPress, handleDeletePress])
 
   return (
@@ -133,12 +141,12 @@ const HabitsScreen = () => {
             {selectedDateStacks.length === 0 ? (
               <EmptyState variant={EmptyStateVariant.HabitsEmpty} />
             ) : (
-              <FlatList
+              <DraggableFlatList
                 data={selectedDateStacks}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.list}
-                extraData={[completedHabitIds, expandedCardId]}
+                onDragEnd={({ data }) => handleReorderHabits(data)}
               />
             )}
           </Animated.View>

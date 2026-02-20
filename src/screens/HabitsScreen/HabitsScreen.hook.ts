@@ -21,7 +21,7 @@ const useHabitsScreen = () => {
   const [editingStack, setEditingStack] = useState<HabitStack | null>(null)
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
 
-  const { stacks, addHabit, removeHabit, completedHabits, toggleHabitCompletion } = useHabitStore()
+  const { stacks, addHabit, removeHabit, reorderHabits, completedHabits, toggleHabitCompletion } = useHabitStore()
 
   const selectedDateStacks = stacks.filter((s) => isHabitStackDueOnDate(s, selectedDate))
   const completedHabitIds = completedHabits[selectedDate] ?? []
@@ -84,6 +84,24 @@ const useHabitsScreen = () => {
     setDeleteSheetVisible(false)
   }
 
+  /**
+   * Applies a new order for the currently visible (filtered) stacks back into the global
+   * stacks array using the interleave approach: non-visible stacks stay at their original
+   * positions; visible stacks are replaced in-place with the new filtered order.
+   */
+  const handleReorderHabits = (newFilteredOrder: HabitStack[]) => {
+    const filteredIds = new Set(selectedDateStacks.map((s) => s.id))
+    const filteredIndices: number[] = []
+    stacks.forEach((s, i) => {
+      if (filteredIds.has(s.id)) filteredIndices.push(i)
+    })
+    const newStacks = [...stacks]
+    filteredIndices.forEach((globalIdx, filteredIdx) => {
+      newStacks[globalIdx] = newFilteredOrder[filteredIdx]
+    })
+    reorderHabits(newStacks)
+  }
+
   return {
     selectedDateStacks,
     selectedDate,
@@ -104,6 +122,7 @@ const useHabitsScreen = () => {
     handleDeletePress,
     handleDeleteConfirm,
     handleDeleteCancel,
+    handleReorderHabits,
   }
 }
 

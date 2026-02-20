@@ -12,6 +12,7 @@ type Props = {
   readonly onExpand: () => void
   readonly onEditPress: () => void
   readonly onDeletePress: () => void
+  readonly onLongPress?: () => void
 }
 
 /**
@@ -19,7 +20,7 @@ type Props = {
  * Tap the card body to reveal Edit and Delete actions below with an animated expand.
  * The checkbox toggles completion for the day without expanding.
  */
-const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, onEditPress, onDeletePress }: Props) => {
+const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, onEditPress, onDeletePress, onLongPress }: Props) => {
   const [anchor, ...stacked] = habitStack.habits
 
   const expandAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current
@@ -36,7 +37,7 @@ const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, on
 
   return (
     <View style={styles.wrapper}>
-      <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onExpand}>
+      <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onExpand} onLongPress={onLongPress} delayLongPress={400}>
         <View style={styles.row}>
           <MaterialCommunityIcons
             name="lightning-bolt"

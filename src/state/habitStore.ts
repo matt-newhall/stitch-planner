@@ -9,6 +9,7 @@ type HabitState = {
   addHabit: (stack: HabitStack) => void
   updateHabit: (id: string, updates: Partial<Pick<HabitStack, 'habits' | 'cadence'>>) => void
   removeHabit: (id: string) => void
+  reorderHabits: (newStacks: HabitStack[]) => void
   toggleHabitCompletion: (stackId: string, isoDate: string) => void
 }
 
@@ -23,6 +24,7 @@ const useHabitStore = create<HabitState>()(
           stacks: state.stacks.map((s) => (s.id === id ? { ...s, ...updates } : s)),
         })),
       removeHabit: (id) => set((state) => ({ stacks: state.stacks.filter((s) => s.id !== id) })),
+      reorderHabits: (newStacks) => set({ stacks: newStacks }),
       toggleHabitCompletion: (stackId, isoDate) =>
         set((state) => {
           const existing = state.completedHabits[isoDate] ?? []
