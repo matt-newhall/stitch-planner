@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useHabitStore from '../../state/habitStore'
 import { todayISO } from '../../utils/date'
 import { isHabitStackDueOnDate } from '../../utils/habit'
+import { computeHabitStreak } from '../../utils/streak'
 import type { Habit, HabitCadence, HabitDraft, HabitStack } from '../../types/habit'
 
 let nextId = 0
@@ -25,6 +26,14 @@ const useHabitsScreen = () => {
 
   const selectedDateStacks = stacks.filter((s) => isHabitStackDueOnDate(s, selectedDate))
   const completedHabitIds = completedHabits[selectedDate] ?? []
+
+  const habitStreaks = useMemo(() => {
+    const result: Record<string, number> = {}
+    for (const stack of stacks) {
+      result[stack.id] = computeHabitStreak(stack.id, stack, completedHabits)
+    }
+    return result
+  }, [stacks, completedHabits])
 
   useEffect(() => {
     setExpandedCardId(null)
@@ -114,6 +123,7 @@ const useHabitsScreen = () => {
     closeEditModal,
     addHabit: handleAddHabit,
     completedHabitIds,
+    habitStreaks,
     toggleCompletion: handleToggleCompletion,
     expandedCardId,
     editingStack,

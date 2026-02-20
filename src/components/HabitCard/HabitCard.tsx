@@ -2,12 +2,14 @@ import { useEffect, useRef } from 'react'
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
+import { StreakBadge } from '../index'
 import type { HabitStack } from '../../types/habit'
 
 type Props = {
   readonly habitStack: HabitStack
   readonly isCompleted: boolean
   readonly isExpanded: boolean
+  readonly streak?: number
   readonly onToggle: () => void
   readonly onExpand: () => void
   readonly onEditPress: () => void
@@ -19,8 +21,9 @@ type Props = {
  * Renders a habit stack as a card showing the anchor habit and any stacked habits.
  * Tap the card body to reveal Edit and Delete actions below with an animated expand.
  * The checkbox toggles completion for the day without expanding.
+ * Shows a small streak badge above the checkbox when the streak is > 0.
  */
-const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, onEditPress, onDeletePress, onLongPress }: Props) => {
+const HabitCard = ({ habitStack, isCompleted, isExpanded, streak, onToggle, onExpand, onEditPress, onDeletePress, onLongPress }: Props) => {
   const [anchor, ...stacked] = habitStack.habits
 
   const expandAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current
@@ -38,49 +41,54 @@ const HabitCard = ({ habitStack, isCompleted, isExpanded, onToggle, onExpand, on
   return (
     <View style={styles.wrapper}>
       <Pressable style={[styles.card, isCompleted && styles.cardCompleted]} onPress={onExpand} onLongPress={onLongPress} delayLongPress={400}>
-        <View style={styles.row}>
-          <MaterialCommunityIcons
-            name="lightning-bolt"
-            color={isCompleted ? COLORS.textSecondary : COLORS.accent}
-            size={20}
-          />
-          <Text style={[styles.sentence, isCompleted && styles.completedText]}>
-            I will{' '}
-            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.behaviour}</Text>
-            {' '}at{' '}
-            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.time}</Text>
-            {' '}in{' '}
-            <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.location}</Text>
-          </Text>
-        </View>
-
-        {stacked.map((habit, index) => (
-          <View key={habit.id} style={styles.stackedRow}>
+        <View style={styles.content}>
+          <View style={styles.row}>
             <MaterialCommunityIcons
-              name="link-variant"
-              color={COLORS.textSecondary}
-              size={16}
+              name="lightning-bolt"
+              color={isCompleted ? COLORS.textSecondary : COLORS.accent}
+              size={20}
             />
-            <Text style={[styles.stackedSentence, isCompleted && styles.completedText]}>
-              After{' '}
-              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
-                {habitStack.habits[index].behaviour}
-              </Text>
-              , I will{' '}
-              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
-                {habit.behaviour}
-              </Text>
+            <Text style={[styles.sentence, isCompleted && styles.completedText]}>
+              I will{' '}
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.behaviour}</Text>
+              {' '}at{' '}
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.time}</Text>
+              {' '}in{' '}
+              <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>{anchor.location}</Text>
             </Text>
           </View>
-        ))}
 
-        <Pressable onPress={onToggle} hitSlop={8} style={styles.checkbox}>
-          <MaterialCommunityIcons
-            name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
-            color={isCompleted ? COLORS.accent : COLORS.textSecondary}
-            size={20}
-          />
-        </Pressable>
+          {stacked.map((habit, index) => (
+            <View key={habit.id} style={styles.stackedRow}>
+              <MaterialCommunityIcons
+                name="link-variant"
+                color={COLORS.textSecondary}
+                size={16}
+              />
+              <Text style={[styles.stackedSentence, isCompleted && styles.completedText]}>
+                After{' '}
+                <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
+                  {habitStack.habits[index].behaviour}
+                </Text>
+                , I will{' '}
+                <Text style={[styles.highlight, isCompleted && styles.completedHighlight]}>
+                  {habit.behaviour}
+                </Text>
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.rightColumn}>
+          {!!streak && <StreakBadge count={streak} small />}
+          <Pressable onPress={onToggle} hitSlop={8} style={styles.checkbox}>
+            <MaterialCommunityIcons
+              name={isCompleted ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'}
+              color={isCompleted ? COLORS.accent : COLORS.textSecondary}
+              size={20}
+            />
+          </Pressable>
+        </View>
       </Pressable>
 
       <Animated.View style={[styles.actionsContainer, { height: actionHeight, overflow: 'hidden' }]}>
@@ -109,14 +117,20 @@ const styles = StyleSheet.create({
   },
   card: {
     paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingLeft: 16,
+    paddingRight: 12,
     backgroundColor: COLORS.navbar,
     borderRadius: 12,
-    gap: 10,
-    paddingRight: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   cardCompleted: {
     backgroundColor: COLORS.surface,
+  },
+  content: {
+    flex: 1,
+    gap: 10,
   },
   row: {
     flexDirection: 'row',
@@ -141,12 +155,12 @@ const styles = StyleSheet.create({
   completedHighlight: {
     color: COLORS.textSecondary,
   },
+  rightColumn: {
+    alignItems: 'center',
+    gap: 6,
+  },
   checkbox: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    paddingVertical: 14,
-    transform: [{ translateY: -10 }],
+    padding: 4,
   },
   stackedRow: {
     flexDirection: 'row',

@@ -31,6 +31,7 @@ const HabitsScreen = () => {
     closeEditModal,
     addHabit,
     completedHabitIds,
+    habitStreaks,
     toggleCompletion,
     expandedCardId,
     editingStack,
@@ -121,6 +122,7 @@ const HabitsScreen = () => {
         habitStack={item}
         isCompleted={completedHabitIds.includes(item.id)}
         isExpanded={expandedCardId === item.id}
+        streak={habitStreaks[item.id]}
         onToggle={() => handleToggleWithCelebration(item.id)}
         onExpand={() => handleCardExpand(item.id)}
         onEditPress={() => handleEditPress(item)}
@@ -128,7 +130,7 @@ const HabitsScreen = () => {
         onLongPress={expandedCardId === null ? drag : undefined}
       />
     </ScaleDecorator>
-  ), [completedHabitIds, expandedCardId, handleToggleWithCelebration, handleCardExpand, handleEditPress, handleDeletePress])
+  ), [completedHabitIds, expandedCardId, habitStreaks, handleToggleWithCelebration, handleCardExpand, handleEditPress, handleDeletePress])
 
   return (
     <View style={styles.container}>
