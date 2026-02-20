@@ -124,7 +124,7 @@ const HabitModalBase = ({
 
   const handleDone = () => {
     onSubmit()
-    fullReset()
+    animateClose()
   }
 
   return (
