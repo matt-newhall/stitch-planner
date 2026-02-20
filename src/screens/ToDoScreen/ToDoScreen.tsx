@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, Keyboard, Platform, StyleSheet, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { scheduleOnRN } from 'react-native-worklets'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import * as Haptics from 'expo-haptics'
 import { useNavigation } from '@react-navigation/native'
@@ -37,24 +38,26 @@ const ToDoScreen = () => {
 
   selectedDateRef.current = selectedDate
 
-  const swipeGesture = useMemo(() =>
-    Gesture.Pan()
+  const swipeGesture = useMemo(() => {
+    const handleSwipeEnd = (translationX: number, velocityX: number) => {
+      if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
+        const direction = translationX > 0 ? -1 : 1
+        const next = shiftDate(selectedDateRef.current, direction)
+        const today = todayISO()
+        const max = shiftDate(today, 6)
+        if (next < today || next > max) return
+        swipeDirectionRef.current = direction
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+        setSelectedDate(next)
+      }
+    }
+    return Gesture.Pan()
       .activeOffsetX([-15, 15])
       .failOffsetY([-20, 20])
       .onEnd((event) => {
-        const { translationX, velocityX } = event
-        if (Math.abs(velocityX) > 300 && Math.abs(translationX) > 30) {
-          const direction = translationX > 0 ? -1 : 1
-          const next = shiftDate(selectedDateRef.current, direction)
-          const today = todayISO()
-          const max = shiftDate(today, 6)
-          if (next < today || next > max) return
-          swipeDirectionRef.current = direction
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-          setSelectedDate(next)
-        }
+        scheduleOnRN(handleSwipeEnd, event.translationX, event.velocityX)
       })
-  , [])
+  }, [])
 
   const handleToggleWithConfetti = useCallback((id: string) => {
     const task = tasks.find((t) => t.id === id)
