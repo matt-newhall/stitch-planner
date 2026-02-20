@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import useHabitStore from '../../state/habitStore'
 import type { HabitStack } from '../../types/habit'
-import HabitModalBase from './HabitModalBase'
-import useHabitModal from './HabitModalBase.hook'
+import { HabitModalBase, useHabitModal } from '../../features'
 
 type Props = {
   readonly visible: boolean

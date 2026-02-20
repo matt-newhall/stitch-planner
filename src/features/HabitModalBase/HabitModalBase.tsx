@@ -14,8 +14,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { COLORS, FONTS } from '../../constants/theme'
 import { SCREEN_HEIGHT } from '../../constants/layout'
 import type { HabitCadenceOption, HabitDraft } from '../../types/habit'
-import AddHabitDetails from './AddHabitDetails'
-import AddHabitCadence from './AddHabitCadence'
+import HabitDetails from './HabitDetails'
+import HabitCadence from './HabitCadence'
 
 const ANIM_DURATION = 300
 const STEP_DURATION = 180
@@ -163,7 +163,7 @@ const HabitModalBase = ({
             style={{ opacity: contentFade, transform: [{ translateX: contentSlide }] }}
           >
             {step === 1 ? (
-              <AddHabitDetails
+              <HabitDetails
                 habits={habits}
                 canStack={canStack}
                 onUpdateBehaviour={onUpdateBehaviour}
@@ -173,7 +173,7 @@ const HabitModalBase = ({
                 onRemoveStack={onRemoveStack}
               />
             ) : (
-              <AddHabitCadence
+              <HabitCadence
                 cadenceType={cadenceType}
                 selectedDays={selectedDays}
                 onPresetPress={onPresetPress}

@@ -14,10 +14,10 @@ type Props = {
 }
 
 /**
- * Step 1 of AddHabitModal — anchor habit inputs (behaviour, time, location)
+ * Step 1 of HabitModalBase — anchor habit inputs (behaviour, time, location)
  * plus optional habit stacking.
  */
-const AddHabitDetails = ({
+const HabitDetails = ({
   habits,
   canStack,
   onUpdateBehaviour,
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AddHabitDetails
+export default HabitDetails

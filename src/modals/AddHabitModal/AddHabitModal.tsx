@@ -1,7 +1,6 @@
 import { todayISO } from '../../utils/date'
 import type { HabitCadence, HabitDraft } from '../../types/habit'
-import HabitModalBase from './HabitModalBase'
-import useHabitModal from './HabitModalBase.hook'
+import { HabitModalBase, useHabitModal } from '../../features'
 
 type Props = {
   readonly visible: boolean

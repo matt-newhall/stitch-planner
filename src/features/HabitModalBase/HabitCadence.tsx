@@ -35,9 +35,9 @@ type Props = {
 }
 
 /**
- * Step 2 of AddHabitModal — cadence preset chips and day-of-week multi-select.
+ * Step 2 of HabitModalBase — cadence preset chips and day-of-week multi-select.
  */
-const AddHabitCadence = ({ cadenceType, selectedDays, onPresetPress, onDayToggle }: Props) => (
+const HabitCadence = ({ cadenceType, selectedDays, onPresetPress, onDayToggle }: Props) => (
   <View style={styles.body}>
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.presetRow}>
       {CADENCE_PRESETS.map(({ label, type }) => (
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AddHabitCadence
+export default HabitCadence
