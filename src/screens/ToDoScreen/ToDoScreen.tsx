@@ -19,16 +19,16 @@ const ToDoScreen = () => {
   const navigation = useNavigation()
   const {
     tasks, emptyStateVariant, streakCount, selectedDate, setSelectedDate,
-    handleAdd, handleToggle, handleDelete,
+    handleAdd, handleToggle, handleDelete, handleStreakPress,
   } = useToDoScreen()
 
   const [bottomPadding, setBottomPadding] = useState(0)
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <StreakBadge count={streakCount} />,
+      headerRight: () => <StreakBadge count={streakCount} onPress={handleStreakPress} />,
     })
-  }, [streakCount])
+  }, [streakCount, handleStreakPress])
 
   const confettiRef = useRef<ConfettiCannon>(null)
   const slideAnim = useRef(new Animated.Value(0)).current

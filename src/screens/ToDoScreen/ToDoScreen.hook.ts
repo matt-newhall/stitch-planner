@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 import useTodoStore from '../../state/todoStore'
-import { todayISO } from '../../utils/date'
+import { todayISO, shiftDate } from '../../utils/date'
 import { computeStreak } from '../../utils/streak'
 import { EmptyStateVariant } from '../../types/task'
 
@@ -20,6 +20,7 @@ const useToDoScreen = () => {
   const toggleTask = useTodoStore((s) => s.toggleTask)
   const deleteTask = useTodoStore((s) => s.deleteTask)
   const reconcileDay = useTodoStore((s) => s.reconcileDay)
+  const backfillStreak = useTodoStore((s) => s.backfillStreak)
 
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
@@ -83,6 +84,13 @@ const useToDoScreen = () => {
     }
   }, [tasks, toggleTask, deleteTask])
 
+  /** Backfills the last 5 days as completed, removing them from failedDays if present. */
+  const handleStreakPress = useCallback(() => {
+    const today = todayISO()
+    const last5 = Array.from({ length: 6 }, (_, i) => shiftDate(today, -(i + 1)))
+    backfillStreak(last5)
+  }, [backfillStreak])
+
   const handleDelete = useCallback((id: string) => {
     const existing = timersRef.current.get(id)
     if (existing) {
@@ -101,6 +109,7 @@ const useToDoScreen = () => {
     handleAdd,
     handleToggle,
     handleDelete,
+    handleStreakPress,
   }
 }
 

@@ -13,6 +13,7 @@ type TodoState = {
   toggleTask: (id: string) => void
   deleteTask: (id: string) => void
   reconcileDay: () => void
+  backfillStreak: (isoDates: string[]) => void
 }
 
 const useTodoStore = create<TodoState>()(
@@ -67,6 +68,12 @@ const useTodoStore = create<TodoState>()(
       deleteTask: (id) =>
         set((state) => ({
           tasks: state.tasks.filter((task) => task.id !== id),
+        })),
+
+      backfillStreak: (isoDates) =>
+        set((state) => ({
+          completedDays: [...new Set([...state.completedDays, ...isoDates])],
+          failedDays: state.failedDays.filter((d) => !isoDates.includes(d)),
         })),
 
       reconcileDay: () =>
